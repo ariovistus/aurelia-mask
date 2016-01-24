@@ -1,4 +1,3 @@
-
 /// <reference path="aurelia/aurelia-animator-css.d.ts" />
 /// <reference path="aurelia/aurelia-binding.d.ts" />
 /// <reference path="aurelia/aurelia-bootstrapper.d.ts" />

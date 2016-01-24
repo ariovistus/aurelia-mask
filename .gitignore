@@ -1,4 +1,4 @@
 node_modules
-jspm_modules
+jspm_packages
 npm-debug.log
 *.swp

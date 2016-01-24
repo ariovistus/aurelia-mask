@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../typings/tsd.d.ts" />
+﻿/// <reference path="../typings/tsd.d.ts" />
 
 import {customElement, bindable, bindingMode, inject} from 'aurelia-framework';
 import {getMasker, Masker} from "./masker";

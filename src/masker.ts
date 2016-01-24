@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../typings/tsd.d.ts" />
+﻿/// <reference path="../typings/tsd.d.ts" />
 
 export function getMasker(format): Masker {
     if (!maskers[format]) {
