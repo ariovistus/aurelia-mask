@@ -16,7 +16,7 @@ module.exports = function(config) {
 
     jspm: {
         loadFiles: [
-            'tests/testit.ts'
+            'tests/masker.spec.ts'
         ],
         serveFiles: [
             '**/*.ts',
@@ -28,6 +28,7 @@ module.exports = function(config) {
     proxies: {
         '/jspm_packages': '/base/jspm_packages',
         '/src': '/base/src',
+        '/typings': '/base/typings',
         '/tests': '/base/tests'
     },
 
