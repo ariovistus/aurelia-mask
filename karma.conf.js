@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Sun Jan 24 2016 12:48:46 GMT-0800 (PST)
+//
 
 module.exports = function(config) {
   config.set({
@@ -8,7 +9,10 @@ module.exports = function(config) {
 
     frameworks: ['jspm', 'jasmine'],
 
-    plugins: ['karma-jasmine', 'karma-jspm', 'karma-chrome-launcher'],
+    plugins: [
+        'karma-jasmine', 'karma-jspm', 'karma-chrome-launcher',
+        'karma-coverage'
+    ],
 
     files: [],
 
@@ -32,11 +36,18 @@ module.exports = function(config) {
         '/tests': '/base/tests'
     },
 
-    preprocessors: {
+    //preprocessors: {
+        //'src/**/*.ts': ['coverage']
+    //},
+
+
+    reporters: ['progress', 'coverage'],
+
+    coverageReporter: {
+        type: 'html',
+        dir: 'coverage',
+        includeAllSources : true
     },
-
-
-    reporters: ['progress'],
 
     port: 9876,
 
