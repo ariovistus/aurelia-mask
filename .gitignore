@@ -3,3 +3,7 @@ jspm_packages
 coverage
 npm-debug.log
 *.swp
+src/*.js
+src/*.js.map
+sample/src/plugins/masked-input/*.js
+sample/src/plugins/masked-input/*.html

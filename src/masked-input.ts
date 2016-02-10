@@ -65,7 +65,7 @@ export class MaskedInput {
     }
 
     bind() {
-        this.masker = getMasker(this.mask);
+        this.masker = getMasker(this.mask, false);
         this.oldValue = this.masker.maskValue(this.value);
     }
 
@@ -281,7 +281,7 @@ export class MaskedInput {
     }
 
     maskChanged() {
-        this.masker = getMasker(this.mask);
+        this.masker = getMasker(this.mask, false);
     }
 }
 
