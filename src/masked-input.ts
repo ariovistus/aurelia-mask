@@ -44,6 +44,7 @@ export class MaskedInput {
     @bindable inputId: string;
     @bindable inputClass: string;
     @bindable disabled: boolean;
+    @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: false}) bindMasking: boolean
 
     masker: Masker;
     preventBackspace: boolean;
@@ -65,7 +66,8 @@ export class MaskedInput {
     }
 
     bind() {
-        this.masker = getMasker(this.mask, false);
+        console.info(`bind masking for ${this.element}: ${this.bindMasking}`);
+        this.masker = getMasker(this.mask, this.bindMasking);
         this.oldValue = this.masker.maskValue(this.value);
     }
 
@@ -281,7 +283,7 @@ export class MaskedInput {
     }
 
     maskChanged() {
-        this.masker = getMasker(this.mask, false);
+        this.masker = getMasker(this.mask, this.bindMasking);
     }
 }
 

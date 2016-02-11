@@ -3,10 +3,10 @@ System.config({
   defaultJSExtensions: true,
   transpiler: "typescript",
   typescriptOptions: {
-      "module": "system",
-      "typeCheck": true,
-      "tsconfig": true,
-      "resolveTypings": true
+    "module": "system",
+    "typeCheck": true,
+    "tsconfig": true,
+    "resolveTypings": true
   },
   paths: {
     "npm:*": "jspm_packages/npm/*",
@@ -15,22 +15,22 @@ System.config({
   },
 
   packages: {
-      "/src": {
-          "defaultExtension": "ts",
-          "meta": {
-              "*.ts": {
-                  "loader": "ts"
-              }
-          }
-      },
-      "/tests": {
-          "defaultExtension": "ts",
-          "meta": {
-              "*.ts": {
-                  "loader": "ts"
-              }
-          }
-      },
+    "/src": {
+      "defaultExtension": "ts",
+      "meta": {
+        "*.ts": {
+          "loader": "ts"
+        }
+      }
+    },
+    "/tests": {
+      "defaultExtension": "ts",
+      "meta": {
+        "*.ts": {
+          "loader": "ts"
+        }
+      }
+    }
   },
 
   map: {

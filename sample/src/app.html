@@ -2,6 +2,9 @@
 <require from="./plugins/masked-input/masked-input"></require>
   <h1>${message}</h1>
 
-  <masked-input value.bind="message" mask.bind="mask"></masked-input>
-
+  <masked-input value.bind="value1" mask.bind="mask"></masked-input>
+  value1: ${value1}
+<br/>
+  <masked-input value.bind="value2" mask.bind="mask" bind-masking="true"></masked-input>
+  value2: ${value2}
 </template>

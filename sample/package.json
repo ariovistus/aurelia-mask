@@ -1,5 +1,5 @@
 {
-  "name": "aurelia-beginner-kit-es2016",
+  "name": "totally-not-aurelia-beginner-kit-es2016",
   "version": "1.0.0-beta.1.0.1",
   "description": "A beginner starter kit for learning Aurelia with ES 2016.",
   "keywords": [
@@ -40,5 +40,9 @@
         "main": "client/shim.min"
       }
     }
+  },
+  "devDependencies": {
+    "http-server": "^0.8.5",
+    "typescript": "^1.7.5"
   }
 }

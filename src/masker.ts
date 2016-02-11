@@ -1,15 +1,15 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
 
-export function getMasker(format: string, bindPlaceholders: boolean): Masker {
+export function getMasker(format: string, bindMasking: boolean): Masker {
     let maskers = _maskers;
-    let bindPlaceholdersIx = bindPlaceholders ? 1 : 0;
+    let bindPlaceholdersIx = bindMasking ? 1 : 0;
     if(!maskers[bindPlaceholdersIx]) {
         maskers[bindPlaceholdersIx] = {};
     }
 
     maskers = maskers[bindPlaceholdersIx];
     if (!maskers[format]) {
-        maskers[format] = new Masker(format, bindPlaceholders);
+        maskers[format] = new Masker(format, bindMasking);
     }
     return maskers[format];
 }
@@ -30,11 +30,11 @@ export class Masker {
     minRequiredLength: number;
     maskComponents: any;
     maskProcessed: boolean;
-    bindPlaceholders: boolean;
+    bindMasking: boolean;
 
-    constructor(maskFormat: string, bindPlaceholders: boolean) {
+    constructor(maskFormat: string, bindMasking: boolean) {
         this.maskFormat = maskFormat;
-        this.bindPlaceholders = bindPlaceholders;
+        this.bindMasking = bindMasking;
         this.maskCaretMap = [];
         this.maskPatterns = [];
         this.maskPlaceholder = '';
@@ -45,7 +45,8 @@ export class Masker {
     }
 
     unmaskValue(value) {
-        if(this.bindPlaceholders) {
+        if(this.bindMasking) {
+            console.info("urp, we gots to bind the masking");
             return this._maskValue(value, true);
         }
         return this._unmaskValue(value);
