@@ -92,5 +92,47 @@ describe("Masker", () => {
             expect(masker.unmaskValue(tst.input)).toBe(tst.result);
         }
     });
+
+    it("should know max caret position given a value", () => {
+        let data = [
+            {value: "",   result: "(*33) 444-5555", fmt: phonefmt},
+            {value: "3",   result: "(3*3) 444-5555", fmt: phonefmt},
+            {value: "33",   result: "(33*) 444-5555", fmt: phonefmt},
+            {value: "333",   result: "(333) *44-5555", fmt: phonefmt},
+            {value: "3334",   result: "(333) 4*4-5555", fmt: phonefmt},
+            {value: "33344",   result: "(333) 44*-5555", fmt: phonefmt},
+            {value: "333445",   result: "(333) 444-*555", fmt: phonefmt},
+            {value: "3334455",   result: "(333) 444-5*55", fmt: phonefmt},
+            {value: "33344555",   result: "(333) 444-55*5", fmt: phonefmt},
+            {value: "333445555",   result: "(333) 444-555*", fmt: phonefmt},
+            {value: "3334445555",   result: "(333) 444-5555*", fmt: phonefmt},
+        ];
+        for(var tst of data) {
+            var masker = getMasker(tst.fmt, false);
+            let caretPos = tst.result.indexOf('*');
+            expect(masker.maxCaretPos(tst.value.length)).toBe(caretPos)
+        }
+    });
+
+    it("should know max caret position given a masked value", () => {
+        let data = [
+            {value: "",   result: "(*33) 444-5555", fmt: phonefmt},
+            {value: "(3",   result: "(3*3) 444-5555", fmt: phonefmt},
+            {value: "(33",   result: "(33*) 444-5555", fmt: phonefmt},
+            {value: "(333",   result: "(333) *44-5555", fmt: phonefmt},
+            {value: "(333) 4",   result: "(333) 4*4-5555", fmt: phonefmt},
+            {value: "(333) 44",   result: "(333) 44*-5555", fmt: phonefmt},
+            {value: "(333) 444",   result: "(333) 444-*555", fmt: phonefmt},
+            {value: "(333) 444-5",   result: "(333) 444-5*55", fmt: phonefmt},
+            {value: "(333) 444-55",   result: "(333) 444-55*5", fmt: phonefmt},
+            {value: "(333) 444-555",   result: "(333) 444-555*", fmt: phonefmt},
+            {value: "(333) 444-5555",   result: "(333) 444-5555*", fmt: phonefmt},
+        ];
+        for(var tst of data) {
+            var masker = getMasker(tst.fmt, true);
+            let caretPos = tst.result.indexOf('*');
+            expect(masker.maxCaretPos(tst.value.length)).toBe(caretPos)
+        }
+    });
 });
 

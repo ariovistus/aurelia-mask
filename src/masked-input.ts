@@ -110,8 +110,8 @@ export class MaskedInput {
                 caretPos = this.getCaretPosition() || 0,
                 caretPosOld = this.oldCaretPosition || 0,
                 caretPosDelta = caretPos - caretPosOld,
-                caretPosMin = this.masker.maskCaretMap[0],
-                caretPosMax = this.masker.maskCaretMap[valUnmasked.length] || this.masker.maskCaretMap.slice().shift(),
+                caretPosMin = this.masker.minCaretPos(),
+                caretPosMax = this.masker.maxCaretPos(valUnmasked.length),
                 selectionLenOld = this.oldSelectionLength || 0,
                 isSelected = this.getSelectionLength() > 0,
                 wasSelected = selectionLenOld > 0,
@@ -139,6 +139,7 @@ export class MaskedInput {
             }
 
             if (isKeyBackspace && this.preventBackspace) {
+                console.info("prevent backspace => show placeholder");
                 this.inputElement.value = this.masker.maskPlaceholder;
                 this.setCaretPosition(caretPosOld);
                 return;
@@ -149,7 +150,7 @@ export class MaskedInput {
 
             // User attempted to delete but raw value was unaffected--correct this grievous offense
             if ((eventType === 'input') && isDeletion && !wasSelected && valUnmasked === valUnmaskedOld) {
-                while (isKeyBackspace && caretPos > caretPosMin && !this.isValidCaretPosition(caretPos, this.value)) {
+                while (isKeyBackspace && caretPos > caretPosMin && !this.isValidCaretPosition(caretPos)) {
                     caretPos--;
                 }
                 while (isKeyDelete && caretPos < caretPosMax && this.masker.maskCaretMap.indexOf(caretPos) === -1) {
@@ -191,11 +192,11 @@ export class MaskedInput {
             caretPos = caretPos > caretPosMax ? caretPosMax : caretPos < caretPosMin ? caretPosMin : caretPos;
 
             // Scoot the caret back or forth until it's in a non-mask position and within min/max position limits
-            while (!this.isValidCaretPosition(caretPos, this.value) && caretPos > caretPosMin && caretPos < caretPosMax) {
+            while (!this.isValidCaretPosition(caretPos) && caretPos > caretPosMin && caretPos < caretPosMax) {
                 caretPos += caretBumpBack ? -1 : 1;
             }
 
-            if ((caretBumpBack && caretPos < caretPosMax) || (isAddition && !this.isValidCaretPosition(caretPosOld, this.value))) {
+            if ((caretBumpBack && caretPos < caretPosMax) || (isAddition && !this.isValidCaretPosition(caretPosOld))) {
                 caretPos++;
             }
             this.oldCaretPosition = caretPos;
@@ -216,22 +217,25 @@ export class MaskedInput {
     }
 
     onKeyDown(e: KeyboardEvent) {
-        var isKeyBackspace = e.which === 8,
-            caretPos = this.getCaretPosition() - 1 || 0; //value in keydown is pre change so bump caret position back to simulate post change
+        var isKeyBackspace = e.which === 8;
+        var oldCaretPos = this.getCaretPosition();
+        var newCaretPosOnBksp = oldCaretPos - 1 || 0;
 
         if (isKeyBackspace) {
-            while (caretPos >= 0) {
-                if (this.isValidCaretPosition(caretPos, this.mask.substring(0, this.value.length-1))) {
+            while (newCaretPosOnBksp >= 0) {
+                if (this.isValidCaretPosition(newCaretPosOnBksp)) {
                     //re-adjust the caret position.
                     //Increment to account for the initial decrement to simulate post change
 
-                    this.caretPos = caretPos;
+                    this.caretPos = newCaretPosOnBksp;
                     break;
                 }
-                caretPos--;
+                newCaretPosOnBksp--;
             }
-            this.preventBackspace = caretPos === -1;
+            this.preventBackspace = newCaretPosOnBksp === -1;
         }
+            console.info('caretpos: ', newCaretPosOnBksp)
+            console.info('preventBackspace: ', this.preventBackspace)
     }
 
     getCaretPosition() {
@@ -251,7 +255,7 @@ export class MaskedInput {
         return 0;
     }
 
-    isValidCaretPosition(pos, value): boolean {
+    isValidCaretPosition(pos): boolean {
         return this.masker.maskCaretMap.indexOf(pos) > -1;
     }
 

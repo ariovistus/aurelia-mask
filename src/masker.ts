@@ -52,6 +52,35 @@ export class Masker {
         return this._unmaskValue(value);
     }
 
+    maskValue(unmaskedValue) {
+        return this._maskValue(unmaskedValue, false);
+    }
+
+    maxCaretPos(valueLength: number): number {
+        if(this.bindMasking) {
+            if(this.maskCaretMap.indexOf(valueLength) != -1 || 
+                valueLength === this.maskFormat.length) {
+                return valueLength;
+            }else {
+                for(var i = 0; i < this.maskCaretMap.length; i++) {
+                    if(this.maskCaretMap[i] > valueLength) 
+                    {
+                        return this.maskCaretMap[i];
+                    }
+                }
+                return this.maskCaretMap.slice().shift();
+
+            }
+        }else{
+            let caretPosMax = this.maskCaretMap[valueLength] || this.maskCaretMap.slice().shift();
+            return caretPosMax;
+        }
+    }
+
+    minCaretPos(): number {
+        return this.maskCaretMap[0];
+    }
+
     _unmaskValue(value) {
         var valueUnmasked = '',
             maskPatternsCopy = this.maskPatterns.slice();
@@ -68,10 +97,6 @@ export class Masker {
         });
 
         return valueUnmasked;
-    }
-
-    maskValue(unmaskedValue) {
-        return this._maskValue(unmaskedValue, false);
     }
 
     _maskValue(unmaskedValue: string, keepMasking: boolean) {
