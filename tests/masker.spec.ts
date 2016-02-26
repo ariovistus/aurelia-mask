@@ -134,5 +134,9 @@ describe("Masker", () => {
             expect(masker.maxCaretPos(tst.value.length)).toBe(caretPos)
         }
     });
+    it("should work with numbers", () => {
+        var masker = getMasker("99", false);
+        expect(masker.maskValue(12)).toBe("12");
+    });
 });
 

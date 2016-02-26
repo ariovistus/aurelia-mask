@@ -21,6 +21,10 @@ var maskDefinitions = {
     'A': /[a-zA-Z]/,
     '*': /[a-zA-Z0-9]/
 };
+// from http://stackoverflow.com/a/9716488/23648
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 export class Masker {
     maskFormat: string;
@@ -53,6 +57,9 @@ export class Masker {
     }
 
     maskValue(unmaskedValue) {
+        if(isNumeric(unmaskedValue)) {
+            unmaskedValue = ""+unmaskedValue;
+        }
         return this._maskValue(unmaskedValue, false);
     }
 
