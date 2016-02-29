@@ -4,8 +4,8 @@ import {Masker, getMasker} from "src/masker";
 
 describe("getMasker", () => {
     it("should cache masker objects", () => {
-        var masker1 = getMasker("999");
-        var masker2 = getMasker("999");
+        var masker1 = getMasker("999", false);
+        var masker2 = getMasker("999", false);
 
         expect(masker1).toBe(masker2);
     });
@@ -110,7 +110,7 @@ describe("Masker", () => {
         for(var tst of data) {
             var masker = getMasker(tst.fmt, false);
             let caretPos = tst.result.indexOf('*');
-            expect(masker.maxCaretPos(tst.value.length)).toBe(caretPos)
+            expect(masker.maxCaretPos(tst.value)).toBe(caretPos)
         }
     });
 
@@ -131,12 +131,46 @@ describe("Masker", () => {
         for(var tst of data) {
             var masker = getMasker(tst.fmt, true);
             let caretPos = tst.result.indexOf('*');
-            expect(masker.maxCaretPos(tst.value.length)).toBe(caretPos)
+            expect(masker.maxCaretPos(tst.value)).toBe(caretPos)
         }
     });
     it("should work with numbers", () => {
         var masker = getMasker("99", false);
         expect(masker.maskValue(12)).toBe("12");
+    });
+
+    it("should get correct max caret position with numbers", () => {
+        var masker = getMasker("99", false);
+        expect(masker.maxCaretPos("12")).toBe(2);
+        expect(masker.maxCaretPos(12)).toBe(2);
+        expect(masker.maxCaretPos(9)).toBe(1);
+    });
+
+    it("should tell me what the heck getMaskComponents is doing", () => {
+        let data = [
+            {mask: "(999) 999-9999"}
+        ];
+
+        for(var tst of data) {
+            var masker = getMasker(tst.mask, true);
+            expect(masker.maskComponents).toEqual(["(", ") ", "-", ""]);
+        }
+    });
+
+    it("should allow customizable placeholder char", () => {
+        let data = [
+            {mask: "(999) 999-9999", input: "", result: "(___) ___-____", placeholder: null},
+            {mask: "(999) 999-9999", input: "", result: "(___) ___-____", placeholder: "_"},
+            {mask: "(999) 999-9999", input: "", result: "(+++) +++-++++", placeholder: "+"},
+            {mask: "(999) 999-9999", input: "", result: "(+++) +++-++++", placeholder: "+="},
+            {mask: "(999) 999-9999", input: "", result: "(   )    -    ", placeholder: " "},
+            {mask: "(999) 999-9999", input: "", result: "(   )    -    ", placeholder: "space"}
+        ];
+
+        for(var tst of data) {
+            var masker = getMasker(tst.mask, false, tst.placeholder);
+            expect(masker.maskValue(tst.input)).toBe(tst.result);
+        }
     });
 });
 

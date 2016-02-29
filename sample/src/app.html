@@ -1,10 +1,45 @@
 <template>
-<require from="./plugins/masked-input/masked-input"></require>
-  <h1>${message}</h1>
+  <require from="./app.css"></require>
+  <require from="./plugins/masked-input/masked-input"></require>
+  <h1>Aurelia Mask Sample</h1>
 
-  <masked-input value.bind="value1" mask.bind="mask"></masked-input>
-  value1: ${value1}
-<br/>
-  <masked-input value.bind="value2" mask.bind="mask" bind-masking="true"></masked-input>
-  value2: ${value2}
+    <table>
+        <thead>
+            <tr>
+                <th> desc </th>
+                <th> mask </th>
+                <th> bound value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> simple: </td>
+                <td>
+                    <masked-input value.bind="value1" mask.bind="mask"></masked-input>
+                </td>
+                <td> ${value1} </td>
+            </tr>
+            <tr>
+                <td> bind masking: </td>
+                <td>
+                      <masked-input value.bind="value2" mask.bind="mask" bind-masking="true"></masked-input>
+                </td>
+                <td> ${value2} </td>
+            </tr>
+            <tr>
+                <td> custom placeholder: </td>
+                <td>
+                      <masked-input value.bind="value3" mask.bind="mask" placeholder="*"></masked-input>
+                </td>
+                <td> ${value3} </td>
+            </tr>
+            <tr>
+                <td> (space) placeholder: </td>
+                <td>
+                  <masked-input value.bind="value4" mask.bind="mask" placeholder="space"></masked-input>
+                </td>
+                <td> ${value4} </td>
+            </tr>
+        </tbody>
+    </table>
 </template>

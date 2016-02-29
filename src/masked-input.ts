@@ -45,6 +45,7 @@ export class MaskedInput {
     @bindable inputClass: string;
     @bindable disabled: boolean;
     @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: false}) bindMasking: boolean
+    @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: null}) placeholder: string;
 
     masker: Masker;
     preventBackspace: boolean;
@@ -66,9 +67,10 @@ export class MaskedInput {
     }
 
     bind() {
-        console.info(`bind masking for ${this.element}: ${this.bindMasking}`);
-        this.masker = getMasker(this.mask, this.bindMasking);
+        console.info("makum mask ", this.mask, this.bindMasking, this.placeholder);
+        this.masker = getMasker(this.mask, this.bindMasking, this.placeholder);
         this.oldValue = this.masker.maskValue(this.value);
+        console.info("old value: ", this.oldValue);
     }
 
     attached() {
@@ -111,7 +113,7 @@ export class MaskedInput {
                 caretPosOld = this.oldCaretPosition || 0,
                 caretPosDelta = caretPos - caretPosOld,
                 caretPosMin = this.masker.minCaretPos(),
-                caretPosMax = this.masker.maxCaretPos(valUnmasked.length),
+                caretPosMax = this.masker.maxCaretPos(valUnmasked),
                 selectionLenOld = this.oldSelectionLength || 0,
                 isSelected = this.getSelectionLength() > 0,
                 wasSelected = selectionLenOld > 0,
@@ -139,8 +141,7 @@ export class MaskedInput {
             }
 
             if (isKeyBackspace && this.preventBackspace) {
-                console.info("prevent backspace => show placeholder");
-                this.inputElement.value = this.masker.maskPlaceholder;
+                this.inputElement.value = this.oldValue;
                 this.setCaretPosition(caretPosOld);
                 return;
             }

@@ -1,15 +1,21 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
 
-export function getMasker(format: string, bindMasking: boolean): Masker {
+export function getMasker(format: string, bindMasking: boolean, _placeholder: string = null): Masker {
     let maskers = _maskers;
     let bindPlaceholdersIx = bindMasking ? 1 : 0;
+    let placeholder = _placeholder || "_";
     if(!maskers[bindPlaceholdersIx]) {
         maskers[bindPlaceholdersIx] = {};
     }
-
     maskers = maskers[bindPlaceholdersIx];
+
+    if(!maskers[placeholder]) {
+        maskers[placeholder] = {};
+    }
+    maskers = maskers[placeholder];
+
     if (!maskers[format]) {
-        maskers[format] = new Masker(format, bindMasking);
+        maskers[format] = new Masker(format, bindMasking, placeholder);
     }
     return maskers[format];
 }
@@ -35,8 +41,9 @@ export class Masker {
     maskComponents: any;
     maskProcessed: boolean;
     bindMasking: boolean;
+    placeholder: string;
 
-    constructor(maskFormat: string, bindMasking: boolean) {
+    constructor(maskFormat: string, bindMasking: boolean, placeholder: string) {
         this.maskFormat = maskFormat;
         this.bindMasking = bindMasking;
         this.maskCaretMap = [];
@@ -45,12 +52,12 @@ export class Masker {
         this.minRequiredLength = 0;
         this.maskComponents = null;
         this.maskProcessed = false;
+        this.placeholder = placeholder;
         this.processRawMask();
     }
 
     unmaskValue(value) {
         if(this.bindMasking) {
-            console.info("urp, we gots to bind the masking");
             return this._maskValue(value, true);
         }
         return this._unmaskValue(value);
@@ -63,7 +70,13 @@ export class Masker {
         return this._maskValue(unmaskedValue, false);
     }
 
-    maxCaretPos(valueLength: number): number {
+    maxCaretPos(value: any): number {
+        let valueLength = -1;
+        if(isString(value)) {
+            valueLength = value.length;
+        }else if(isNumeric(value)) {
+            valueLength = (""+value).length;
+        }
         if(this.bindMasking) {
             if(this.maskCaretMap.indexOf(valueLength) != -1 || 
                 valueLength === this.maskFormat.length) {
@@ -230,7 +243,7 @@ export class Masker {
 
 
     getPlaceholderChar(i) {
-        var defaultPlaceholderChar = '_';
+        var defaultPlaceholderChar = this.placeholder;
         return (defaultPlaceholderChar.toLowerCase() === 'space') ? ' ' : defaultPlaceholderChar[0];
     }
 }
