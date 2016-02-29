@@ -67,10 +67,8 @@ export class MaskedInput {
     }
 
     bind() {
-        console.info("makum mask ", this.mask, this.bindMasking, this.placeholder);
         this.masker = getMasker(this.mask, this.bindMasking, this.placeholder);
         this.oldValue = this.masker.maskValue(this.value);
-        console.info("old value: ", this.oldValue);
     }
 
     attached() {
@@ -103,35 +101,34 @@ export class MaskedInput {
                 return;
             }
 
-            var val = this.inputElement.value,
-                valOld = this.oldValue,
-                valMasked,
-                valAltered = false,
-                valUnmasked = this.value || '',
-                valUnmaskedOld = this.oldValueUnmasked,
-                caretPos = this.getCaretPosition() || 0,
-                caretPosOld = this.oldCaretPosition || 0,
-                caretPosDelta = caretPos - caretPosOld,
-                caretPosMin = this.masker.minCaretPos(),
-                caretPosMax = this.masker.maxCaretPos(valUnmasked),
-                selectionLenOld = this.oldSelectionLength || 0,
-                isSelected = this.getSelectionLength() > 0,
-                wasSelected = selectionLenOld > 0,
+            let val = this.inputElement.value;
+            let valOld = this.oldValue;
+            let valAltered = false;
+            let valUnmasked = this.value || '';
+            let valUnmaskedOld = this.oldValueUnmasked;
+            let caretPos = this.getCaretPosition() || 0;
+            let caretPosOld = this.oldCaretPosition || 0;
+            let caretPosDelta = caretPos - caretPosOld;
+            let caretPosMin = this.masker.minCaretPos();
+            let caretPosMax = this.masker.maxCaretPos(valUnmasked);
+            let selectionLenOld = this.oldSelectionLength || 0;
+            let isSelected = this.getSelectionLength() > 0;
+            let wasSelected = selectionLenOld > 0;
                 // Case: Typing a character to overwrite a selection
-                isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld),
+            let isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
                 // Case: Delete and backspace behave identically on a selection
-                isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld),
-                isSelection = (eventWhich >= 37 && eventWhich <= 40) && e.shiftKey, // Arrow key codes
+            let isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld);
+            let isSelection = (eventWhich >= 37 && eventWhich <= 40) && e.shiftKey; // Arrow key codes
 
-                isKeyLeftArrow = eventWhich === 37,
+            let isKeyLeftArrow = eventWhich === 37;
                 // Necessary due to "input" event not providing a key code
-                isKeyBackspace = eventWhich === 8 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === -1)),
-                isKeyDelete = eventWhich === 46 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === 0) && !wasSelected),
+            let isKeyBackspace = eventWhich === 8 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === -1));
+            let isKeyDelete = eventWhich === 46 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === 0) && !wasSelected);
                 // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
                 // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
                 // non-mask character. Also applied to click since users are (arguably) more likely to backspace
                 // a character when clicking within a filled input.
-                caretBumpBack = (isKeyLeftArrow || isKeyBackspace || eventType === 'click') && caretPos > caretPosMin;
+            let caretBumpBack = (isKeyLeftArrow || isKeyBackspace || eventType === 'click') && caretPos > caretPosMin;
 
             this.oldSelectionLength = this.getSelectionLength();
 
@@ -164,7 +161,7 @@ export class MaskedInput {
             }
 
             // Update values
-            valMasked = this.masker.maskValue(valUnmasked);
+            let valMasked = this.masker.maskValue(valUnmasked);
 
             this.oldValue = valMasked;
             this.oldValueUnmasked = valUnmasked;
@@ -235,8 +232,6 @@ export class MaskedInput {
             }
             this.preventBackspace = newCaretPosOnBksp === -1;
         }
-            console.info('caretpos: ', newCaretPosOnBksp)
-            console.info('preventBackspace: ', this.preventBackspace)
     }
 
     getCaretPosition() {
