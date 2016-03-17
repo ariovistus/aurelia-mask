@@ -53,17 +53,23 @@ export class MaskedInput {
     oldValueUnmasked: string;
     oldCaretPosition: number;
     oldSelectionLength: number;
-
     caretPos: number;
-    keyDownListener: any;
-    eventListener: any;
+
+    keyDownHandler: any;
+    keyUpHandler: any;
+    inputHandler: any;
+    clickHandler: any;
+    focusHandler: any;
 
 
     constructor(element: Element) {
         this.element = element;
         this.preventBackspace = false;
-        this.keyDownListener = e => this.onKeyDown(e);
-        this.eventListener = e => this.onEvent(e);
+        this.keyDownHandler = e => this.onKeyDown(e);
+        this.keyUpHandler = e => this.onKeyUp(e);
+        this.clickHandler = e => this.onClick(e);
+        this.inputHandler = e => this.onInput(e);
+        this.focusHandler = e => this.onFocus(e);
     }
 
     bind() {
@@ -73,133 +79,275 @@ export class MaskedInput {
 
     attached() {
         this.inputElement = (<any>this.element).children[0];
-        this.inputElement.addEventListener("keydown", this.keyDownListener);
-        this.inputElement.addEventListener('keyup', this.eventListener);
-        this.inputElement.addEventListener('input', this.eventListener);
-        this.inputElement.addEventListener('click', this.eventListener);
-        this.inputElement.addEventListener('focus', this.eventListener);
+        this.inputElement.addEventListener("keydown", this.keyDownHandler);
+        this.inputElement.addEventListener('keyup', this.keyUpHandler);
+        this.inputElement.addEventListener('input', this.inputHandler);
+        this.inputElement.addEventListener('click', this.clickHandler);
+        this.inputElement.addEventListener('focus', this.focusHandler);
         this.caretPos = this.getCaretPosition();
+        this.inputElement.value = this.oldValue;
     }
 
     detached() {
-        this.inputElement.removeEventListener("keydown", this.keyDownListener);
-        this.inputElement.removeEventListener('keyup', this.eventListener);
-        this.inputElement.removeEventListener('input', this.eventListener);
-        this.inputElement.removeEventListener('click', this.eventListener);
-        this.inputElement.removeEventListener('focus', this.eventListener);
+        this.inputElement.removeEventListener("keydown", this.keyDownHandler);
+        this.inputElement.removeEventListener('keyup', this.keyUpHandler);
+        this.inputElement.removeEventListener('input', this.inputHandler);
+        this.inputElement.removeEventListener('click', this.clickHandler);
+        this.inputElement.removeEventListener('focus', this.focusHandler);
     }
 
-    onEvent(e: any) {
-            /*jshint validthis: true */
-            e = e || {};
-            // Allows more efficient minification
-            var eventWhich = e.which,
-                eventType = e.type;
+    get maxCaretPos() {
+        if(this.masker == null) {
+            return 0;
+        }
+        let valUnmasked = this.unmaskedModelValue;
+        let caretPosMax = this.masker.maxCaretPos(valUnmasked);
+        return caretPosMax;
+    }
 
-            // Prevent shift and ctrl from mucking with old values
-            if (eventWhich === 16 || eventWhich === 91) {
-                return;
-            }
+    get minCaretPos() {
+        if(this.masker == null) {
+            return 0;
+        }
+        return this.masker.minCaretPos();
+    }
 
-            let val = this.inputElement.value;
-            let valOld = this.oldValue;
-            let valAltered = false;
-            let valUnmasked = this.value || '';
-            let valUnmaskedOld = this.oldValueUnmasked;
-            let caretPos = this.getCaretPosition() || 0;
-            let caretPosOld = this.oldCaretPosition || 0;
-            let caretPosDelta = caretPos - caretPosOld;
-            let caretPosMin = this.masker.minCaretPos();
-            let caretPosMax = this.masker.maxCaretPos(valUnmasked);
-            let selectionLenOld = this.oldSelectionLength || 0;
-            let isSelected = this.getSelectionLength() > 0;
-            let wasSelected = selectionLenOld > 0;
-                // Case: Typing a character to overwrite a selection
-            let isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
-                // Case: Delete and backspace behave identically on a selection
-            let isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld);
-            let isSelection = (eventWhich >= 37 && eventWhich <= 40) && e.shiftKey; // Arrow key codes
+    onClick(e: any) {
+        /*jshint validthis: true */
+        e = e || {};
 
-            let isKeyLeftArrow = eventWhich === 37;
-                // Necessary due to "input" event not providing a key code
-            let isKeyBackspace = eventWhich === 8 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === -1));
-            let isKeyDelete = eventWhich === 46 || (eventType !== 'keyup' && isDeletion && (caretPosDelta === 0) && !wasSelected);
-                // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
-                // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
-                // non-mask character. Also applied to click since users are (arguably) more likely to backspace
-                // a character when clicking within a filled input.
-            let caretBumpBack = (isKeyLeftArrow || isKeyBackspace || eventType === 'click') && caretPos > caretPosMin;
+        let valUnmasked = this.unmaskedUIValue;
+        let caretPos = this.getCaretPosition() || 0;
+        let caretPosOld = this.oldCaretPosition || 0;
+        let caretPosDelta = caretPos - caretPosOld;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let isSelected = this.getSelectionLength() > 0;
+        let wasSelected = selectionLenOld > 0;
 
-            this.oldSelectionLength = this.getSelectionLength();
+        // Necessary due to "input" event not providing a key code
+        let isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
+        let isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
+        // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
+        // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
+        // non-mask character. Also applied to click since users are (arguably) more likely to backspace
+        // a character when clicking within a filled input.
+        let caretBumpBack = caretPos > this.minCaretPos;
 
-            // These events don't require any action
-            if (isSelection || (isSelected && (eventType === 'click' || eventType === 'keyup'))) {
-                return;
-            }
+        this.oldSelectionLength = this.getSelectionLength();
 
-            if (isKeyBackspace && this.preventBackspace) {
-                this.inputElement.value = this.oldValue;
-                this.setCaretPosition(caretPosOld);
-                return;
-            }
+        // These events don't require any action
+        if (isSelected) {
+            return;
+        }
 
-            // Value Handling
-            // ==============
+        if (isKeyBackspace && this.preventBackspace) {
+            this.inputElement.value = this.oldValue;
+            this.setCaretPosition(caretPosOld);
+            return;
+        }
 
-            // User attempted to delete but raw value was unaffected--correct this grievous offense
-            if ((eventType === 'input') && isDeletion && !wasSelected && valUnmasked === valUnmaskedOld) {
-                while (isKeyBackspace && caretPos > caretPosMin && !this.isValidCaretPosition(caretPos)) {
-                    caretPos--;
-                }
-                while (isKeyDelete && caretPos < caretPosMax && this.masker.maskCaretMap.indexOf(caretPos) === -1) {
-                    caretPos++;
-                }
-                var charIndex = this.masker.maskCaretMap.indexOf(caretPos);
-                // Strip out non-mask character that user would have deleted if mask hadn't been in the way.
-                valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
-                valAltered = true;
-            }
+        // Update values
+        this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
+    }
 
-            // Update values
-            let valMasked = this.masker.maskValue(valUnmasked);
+    get unmaskedUIValue() {
+        let val = this.inputElement.value;
+        let unmasked = this.masker.unmaskValue(val);
+        return unmasked;
+    }
 
-            this.oldValue = valMasked;
-            this.oldValueUnmasked = valUnmasked;
+    get unmaskedModelValue() {
+        let val = this.value;
+        let unmasked = this.masker.unmaskValue(val);
+        return unmasked;
+    }
 
-            //additional check to fix the problem where the viewValue is out of sync with the value of the element.
-            //better fix for commit 2a83b5fb8312e71d220a497545f999fc82503bd9 (I think)
-            if (!valAltered && val.length > valMasked.length)
-                valAltered = true;
+    isAddition() {
+        // Case: Typing a character to overwrite a selection
+        let val = this.unmaskedUIValue;
+        let valOld = this.oldValue;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let _isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
+        return _isAddition;
+    }
 
-            this.inputElement.value = valMasked;
+    isDeletion() {
+        // Case: Delete and backspace behave identically on a selection
+        let val = this.unmaskedUIValue;
+        let valOld = this.oldValue;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let _isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld);
+        return _isDeletion;
+    }
 
-            // Caret Repositioning
-            // ===================
+    onInput(e: any) {
+        /*jshint validthis: true */
+        e = e || {};
+        // Allows more efficient minification
 
-            // Ensure that typing always places caret ahead of typed character in cases where the first char of
-            // the input is a mask char and the caret is placed at the 0 position.
-            if (isAddition && (caretPos <= caretPosMin)) {
-                caretPos = caretPosMin + 1;
-            }
+        let valUnmasked = this.unmaskedUIValue;
+        let valUnmaskedOld = this.oldValueUnmasked;
+        let caretPos = this.getCaretPosition() || 0;
+        let caretPosOld = this.oldCaretPosition || 0;
+        let caretPosDelta = caretPos - caretPosOld;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let wasSelected = selectionLenOld > 0;
 
-            if (caretBumpBack) {
+        // Necessary due to "input" event not providing a key code
+        let isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
+        let isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
+        // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
+        // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
+        // non-mask character. Also applied to click since users are (arguably) more likely to backspace
+        // a character when clicking within a filled input.
+        let caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
+
+        this.oldSelectionLength = this.getSelectionLength();
+
+        if (isKeyBackspace && this.preventBackspace) {
+            this.inputElement.value = this.oldValue;
+            this.setCaretPosition(caretPosOld);
+            return;
+        }
+
+        // Value Handling
+        // ==============
+
+        // User attempted to delete but raw value was unaffected--correct this grievous offense
+        if (this.isDeletion() && !wasSelected && valUnmasked === valUnmaskedOld) {
+            while (isKeyBackspace && caretPos > this.minCaretPos && !this.isValidCaretPosition(caretPos)) {
                 caretPos--;
             }
-
-            // Make sure caret is within min and max position limits
-            caretPos = caretPos > caretPosMax ? caretPosMax : caretPos < caretPosMin ? caretPosMin : caretPos;
-
-            // Scoot the caret back or forth until it's in a non-mask position and within min/max position limits
-            while (!this.isValidCaretPosition(caretPos) && caretPos > caretPosMin && caretPos < caretPosMax) {
-                caretPos += caretBumpBack ? -1 : 1;
-            }
-
-            if ((caretBumpBack && caretPos < caretPosMax) || (isAddition && !this.isValidCaretPosition(caretPosOld))) {
+            while (isKeyDelete && caretPos < this.maxCaretPos && this.masker.maskCaretMap.indexOf(caretPos) === -1) {
                 caretPos++;
             }
-            this.oldCaretPosition = caretPos;
-            this.caretPos = caretPos;
-            this.setCaretPosition(this.caretPos);
+            var charIndex = this.masker.maskCaretMap.indexOf(caretPos);
+            // Strip out non-mask character that user would have deleted if mask hadn't been in the way.
+            valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
+        }
+
+        // Update values
+        this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
+        this.value = valUnmasked;
+    }
+
+    onFocus(e: any) {
+        /*jshint validthis: true */
+        e = e || {};
+
+        let valUnmasked = this.unmaskedUIValue;
+        let caretPos = this.getCaretPosition() || 0;
+        let caretPosOld = this.oldCaretPosition || 0;
+        let caretPosDelta = caretPos - caretPosOld;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let wasSelected = selectionLenOld > 0;
+
+        // Necessary due to "input" event not providing a key code
+        let isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
+        let isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
+        // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
+        // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
+        // non-mask character. Also applied to click since users are (arguably) more likely to backspace
+        // a character when clicking within a filled input.
+        let caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
+
+        this.oldSelectionLength = this.getSelectionLength();
+
+        if (isKeyBackspace && this.preventBackspace) {
+            this.inputElement.value = this.oldValue;
+            this.setCaretPosition(caretPosOld);
+            return;
+        }
+
+        // Update values
+        this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
+    }
+
+    onKeyUp(e: any) {
+        /*jshint validthis: true */
+        e = e || {};
+        var eventType = e.type;
+
+        // Prevent shift and ctrl from mucking with old values
+        if (e.which === 16 || e.which === 91) {
+            return;
+        }
+
+        let valUnmasked = this.unmaskedUIValue;
+        let caretPos = this.getCaretPosition() || 0;
+        let caretPosOld = this.oldCaretPosition || 0;
+        let caretPosDelta = caretPos - caretPosOld;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let isSelected = this.getSelectionLength() > 0;
+        let isSelection = (e.which >= 37 && e.which <= 40) && e.shiftKey; // Arrow key codes
+
+        let isKeyLeftArrow = e.which === 37;
+        // Necessary due to "input" event not providing a key code
+        let isKeyBackspace = e.which === 8;
+        let isKeyDelete = e.which === 46;
+        // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
+        // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
+        // non-mask character. Also applied to click since users are (arguably) more likely to backspace
+        // a character when clicking within a filled input.
+        let caretBumpBack = (isKeyLeftArrow || isKeyBackspace) && caretPos > this.minCaretPos;
+
+        this.oldSelectionLength = this.getSelectionLength();
+
+        // These events don't require any action
+        if (isSelection || isSelected) {
+            return;
+        }
+
+        if (isKeyBackspace && this.preventBackspace) {
+            this.inputElement.value = this.oldValue;
+            this.setCaretPosition(caretPosOld);
+            return;
+        }
+
+        // Update values
+        this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
+        this.value = valUnmasked;
+    }
+
+    updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld) {
+        // Update values
+        let isAddition = this.isAddition();
+        let valMasked = this.masker.maskValue(valUnmasked);
+        let caretPosMin = this.minCaretPos;
+        let caretPosMax = this.masker.maxCaretPos(valUnmasked);
+
+        this.oldValue = valMasked;
+        this.oldValueUnmasked = valUnmasked;
+
+        this.inputElement.value = valMasked;
+
+        // Caret Repositioning
+        // ===================
+
+        // Ensure that typing always places caret ahead of typed character in cases where the first char of
+        // the input is a mask char and the caret is placed at the 0 position.
+        if (isAddition && (caretPos <= caretPosMin)) {
+            caretPos = caretPosMin + 1;
+        }
+
+        if (caretBumpBack) {
+            caretPos--;
+        }
+
+        // Make sure caret is within min and max position limits
+        caretPos = caretPos > caretPosMax ? caretPosMax : caretPos < caretPosMin ? caretPosMin : caretPos;
+
+        // Scoot the caret back or forth until it's in a non-mask position and within min/max position limits
+        while (!this.isValidCaretPosition(caretPos) && caretPos > caretPosMin && caretPos < caretPosMax) {
+            caretPos += caretBumpBack ? -1 : 1;
+        }
+
+        if ((caretBumpBack && caretPos < caretPosMax) || (isAddition && !this.isValidCaretPosition(caretPosOld))) {
+            caretPos++;
+        }
+        this.oldCaretPosition = caretPos;
+        this.caretPos = caretPos;
+        this.setCaretPosition(this.caretPos);
     }
 
     getSelectionLength() {
@@ -284,6 +432,27 @@ export class MaskedInput {
 
     maskChanged() {
         this.masker = getMasker(this.mask, this.bindMasking);
+    }
+
+    valueChanged() {
+        let valUnmasked = this.unmaskedModelValue;
+        let caretPos = this.getCaretPosition() || 0;
+        let caretPosOld = this.oldCaretPosition || 0;
+        let caretPosDelta = caretPos - caretPosOld;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let isSelected = this.getSelectionLength() > 0;
+
+        // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
+        // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
+        // non-mask character. Also applied to click since users are (arguably) more likely to backspace
+        // a character when clicking within a filled input.
+        let caretBumpBack = caretPos > this.minCaretPos;
+
+        this.oldSelectionLength = this.getSelectionLength();
+
+        // Update values
+        this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
+        this.value = valUnmasked;
     }
 }
 
