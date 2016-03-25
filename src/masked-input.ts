@@ -33,6 +33,17 @@ import {getMasker, Masker} from "./masker";
  * 9: 
  * format (999) 999-9999, current value: 3334445555, caret at end: (333) 444-5555|
  * type '6' should do this: (333) 444-5555|
+ * 10: 
+ * format (999) 999-9999, current value: 3334445555, caret at beginning: (|333) 444-5555
+ * type '6' should do this: (6|33) 344-4555
+ * 11: 
+ * format (999) 999-9999, current value: 3334445555, caret at beginning: (|333) 444-5555
+ * type 'x' should do this: (3|33) 444-5555
+ * 12: 
+ * format (999) 999-9999, current value: '', caret at beginning: (|___) ___-____
+ * press and hold '3' should do this: (333) 333-3333|
+ * also, caret should move right and stop at end. it should not jump back to the left when it has reached 
+ * the right edge
  */
 @customElement('masked-input')
 @inject(Element)
@@ -227,6 +238,7 @@ export class MaskedInput {
         }
 
         // Update values
+        console.info("input", valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.value = valUnmasked;
     }
@@ -305,6 +317,7 @@ export class MaskedInput {
         }
 
         // Update values
+        console.info("keyup", valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.value = valUnmasked;
     }

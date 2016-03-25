@@ -2,6 +2,8 @@
 // Generated on Sun Jan 24 2016 12:48:46 GMT-0800 (PST)
 //
 
+var singleRun = true;
+
 module.exports = function(config) {
   config.set({
 
@@ -20,7 +22,8 @@ module.exports = function(config) {
 
     jspm: {
         loadFiles: [
-            'tests/masker.spec.ts'
+            //'tests/unit/src/masker.spec.ts'
+            'tests/unit/src/masked-input.spec.ts'
         ],
         serveFiles: [
             '**/*.ts',
@@ -55,10 +58,10 @@ module.exports = function(config) {
 
     logLevel: config.LOG_INFO,
 
-    autoWatch: false,
+    autoWatch: !singleRun,
 
     browsers: ['Chrome'],
 
-    singleRun: true
+    singleRun: singleRun
   });
 };

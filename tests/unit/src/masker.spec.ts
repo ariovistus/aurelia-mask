@@ -1,4 +1,4 @@
-/// <reference path="./jasmine/jasmine.d.ts" />
+/// <reference path="../../jasmine/jasmine.d.ts" />
 
 import {Masker, getMasker} from "src/masker";
 
@@ -15,6 +15,7 @@ describe("Masker", () => {
     var phonefmt = "(999) 999-9999";
     var mask_data = [
         {input: "3334445555",   result: "(333) 444-5555", fmt: phonefmt},
+        {input: "333vvv4445555",   result: "(333) 444-5555", fmt: phonefmt},
         {input: "(333) 444-5555",result: "(333) 444-5555", fmt: phonefmt},
         {input: "((333) 444-5555",result: "(333) 444-5555", fmt: phonefmt},
         {input: "333444",       result: "(333) 444-____", fmt: phonefmt},
