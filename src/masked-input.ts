@@ -86,6 +86,7 @@ export class MaskedInput {
     bind() {
         this.masker = getMasker(this.mask, this.bindMasking, this.placeholder);
         this.oldValue = this.masker.maskValue(this.value);
+        this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     }
 
     attached() {
@@ -97,6 +98,7 @@ export class MaskedInput {
         this.inputElement.addEventListener('focus', this.focusHandler);
         this.caretPos = this.getCaretPosition();
         this.inputElement.value = this.oldValue;
+        this.updateUIValue(this.oldValue, false, this.minCaretPos, this.minCaretPos);
     }
 
     detached() {
@@ -176,7 +178,7 @@ export class MaskedInput {
     isAddition() {
         // Case: Typing a character to overwrite a selection
         let val = this.unmaskedUIValue;
-        let valOld = this.oldValue;
+        let valOld = this.oldValueUnmasked;
         let selectionLenOld = this.oldSelectionLength || 0;
         let _isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
         return _isAddition;
@@ -185,7 +187,7 @@ export class MaskedInput {
     isDeletion() {
         // Case: Delete and backspace behave identically on a selection
         let val = this.unmaskedUIValue;
-        let valOld = this.oldValue;
+        let valOld = this.oldValueUnmasked;
         let selectionLenOld = this.oldSelectionLength || 0;
         let _isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld);
         return _isDeletion;
@@ -238,7 +240,6 @@ export class MaskedInput {
         }
 
         // Update values
-        console.info("input", valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.value = valUnmasked;
     }
@@ -317,7 +318,6 @@ export class MaskedInput {
         }
 
         // Update values
-        console.info("keyup", valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.value = valUnmasked;
     }
@@ -419,7 +419,7 @@ export class MaskedInput {
     setCaretPosition(pos) {
         if (!this.inputElement)
             return 0;
-        if (this.inputElement.offsetWidth === 0 || this.inputElement.offsetHeight === 0) {
+        if (this.isHidden()) {
             return; // Input's hidden
         }
         if (this.inputElement.setSelectionRange) {
@@ -441,6 +441,10 @@ export class MaskedInput {
     isFocused(): boolean {
         return this.inputElement === document.activeElement && (!document.hasFocus || document.hasFocus()) &&
             !!(this.inputElement.type || (<any>this.inputElement).href || ~this.inputElement.tabIndex);
+    }
+
+    isHidden(): boolean {
+        return (this.inputElement.offsetWidth === 0 || this.inputElement.offsetHeight === 0);
     }
 
     maskChanged() {

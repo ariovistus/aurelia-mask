@@ -22,7 +22,7 @@ module.exports = function(config) {
 
     jspm: {
         loadFiles: [
-            //'tests/unit/src/masker.spec.ts'
+            'tests/unit/src/masker.spec.ts',
             'tests/unit/src/masked-input.spec.ts'
         ],
         serveFiles: [
