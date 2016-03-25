@@ -55,12 +55,10 @@ describe ("MaskedInput", () => {
     it("should do things on things", () => {
         initialize();
         // type '1', '2', 'left', 'left', 'v' should result in '12'
-        let element = document.createElement("masked-input");
         let inputElement = document.createElement("input");
-        element.appendChild(inputElement);
         let container = new Container();
         container.makeGlobal();
-        container.registerInstance(Element, element);
+        container.registerInstance(Element, inputElement);
         let engine = container.get(TemplatingEngine)
         let mask = "(999) 999-9999";
         let maskedInput = engine.createViewModelForUnitTest(MaskedInput, {
@@ -72,7 +70,7 @@ describe ("MaskedInput", () => {
         expect(maskedInput.mask).toBe(mask);
         expect(maskedInput.value).toBe("");
         expect(inputElement.value).toBe("");
-        expect(maskedInput.element).toBe(element);
+        expect(maskedInput.element).toBe(inputElement);
         expect(maskedInput.getCaretPosition()).toBe(0);
 
         maskedInput.attached();
@@ -141,8 +139,6 @@ describe ("MaskedInput", () => {
         keyupEvent = makeKeyupEvent('v');
         maskedInput.onKeyUp(keyupEvent);
         expect(inputElement.value).toBe("(12_) ___-____");
-        expect(maskedInput.oldValue).toBe("(12_) ___-____");
-        expect(maskedInput.oldValueUnmasked).toBe("12");
         expect(maskedInput.value).toBe("12");
         expect(getCursor(inputElement)).toBe(2);
     });

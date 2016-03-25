@@ -1,6 +1,6 @@
 ﻿/// <reference path="../typings/tsd.d.ts" />
 
-import {customElement, bindable, bindingMode, inject} from 'aurelia-framework';
+import {customAttribute, bindable, bindingMode, inject} from 'aurelia-framework';
 import {getMasker, Masker} from "./masker";
 
 /**
@@ -45,7 +45,7 @@ import {getMasker, Masker} from "./masker";
  * also, caret should move right and stop at end. it should not jump back to the left when it has reached 
  * the right edge
  */
-@customElement('masked-input')
+@customAttribute('masked')
 @inject(Element)
 export class MaskedInput {
     element: Element;
@@ -72,8 +72,12 @@ export class MaskedInput {
     clickHandler: any;
     focusHandler: any;
 
+    isAttached: boolean;
+
 
     constructor(element: Element) {
+        console.info("mask constructor");
+        this.isAttached = false;
         this.element = element;
         this.preventBackspace = false;
         this.keyDownHandler = e => this.onKeyDown(e);
@@ -84,13 +88,16 @@ export class MaskedInput {
     }
 
     bind() {
+        console.info("mask bind");
         this.masker = getMasker(this.mask, this.bindMasking, this.placeholder);
         this.oldValue = this.masker.maskValue(this.value);
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     }
 
     attached() {
-        this.inputElement = (<any>this.element).children[0];
+        this.isAttached = true;
+        console.info("mask attached");
+        this.inputElement = (<HTMLInputElement>this.element);
         this.inputElement.addEventListener("keydown", this.keyDownHandler);
         this.inputElement.addEventListener('keyup', this.keyUpHandler);
         this.inputElement.addEventListener('input', this.inputHandler);
@@ -164,9 +171,13 @@ export class MaskedInput {
     }
 
     get unmaskedUIValue() {
-        let val = this.inputElement.value;
-        let unmasked = this.masker.unmaskValue(val);
-        return unmasked;
+        if(this.isAttached) {
+            let val = this.inputElement.value;
+            let unmasked = this.masker.unmaskValue(val);
+            return unmasked;
+        }else{
+            return this.value;
+        }
     }
 
     get unmaskedModelValue() {
@@ -332,7 +343,9 @@ export class MaskedInput {
         this.oldValue = valMasked;
         this.oldValueUnmasked = valUnmasked;
 
-        this.inputElement.value = valMasked;
+        if(this.isAttached) {
+            this.inputElement.value = valMasked;
+        }
 
         // Caret Repositioning
         // ===================

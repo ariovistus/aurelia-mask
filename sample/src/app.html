@@ -16,7 +16,7 @@
             <tr>
                 <td> simple: </td>
                 <td>
-                    <masked-input value.bind="value1" mask.bind="mask"></masked-input>
+                    <input masked="value.bind: value1; mask.bind: mask;"/>
                 </td>
                 <td> ${value1} </td>
                 <td> <button click.trigger="update1()">Update</button> </td>
@@ -24,7 +24,7 @@
             <tr>
                 <td> bind masking: </td>
                 <td>
-                      <masked-input value.bind="value2" mask.bind="mask" bind-masking="true"></masked-input>
+                    <input masked="value.bind: value2; mask.bind: mask; bind-masking: true;"/>
                 </td>
                 <td> ${value2} </td>
                 <td> <button click.trigger="update2()">Update</button> </td>
@@ -32,7 +32,7 @@
             <tr>
                 <td> custom placeholder: </td>
                 <td>
-                      <masked-input value.bind="value3" mask.bind="mask" placeholder="*"></masked-input>
+                    <input masked="value.bind: value3; mask.bind: mask; placeholder: *;"/>
                 </td>
                 <td> ${value3} </td>
                 <td> <button click.trigger="update3()">Update</button> </td>
@@ -40,7 +40,7 @@
             <tr>
                 <td> (space) placeholder: </td>
                 <td>
-                  <masked-input value.bind="value4" mask.bind="mask" placeholder="space"></masked-input>
+                    <input masked="value.bind: value4; mask.bind: mask; placeholder: space;"/>
                 </td>
                 <td> ${value4} </td>
                 <td> <button click.trigger="update4()">Update</button> </td>

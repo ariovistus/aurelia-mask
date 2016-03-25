@@ -1,4 +1,4 @@
-masked-input input {
+input[masked] {
     font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
 }
 
