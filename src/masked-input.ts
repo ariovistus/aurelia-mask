@@ -3,48 +3,6 @@
 import {customAttribute, bindable, bindingMode, inject} from 'aurelia-framework';
 import {getMasker, Masker} from "./masker";
 
-/**
- * Test cases for this horrid thing:
- * 1:
- * format (999) 999-9999, current value: 3334445555, caret at end: (333) 444-5555|
- * <backspace> should make it do this: (333) 444-555|_
- * 2: 
- * format (999) 999-9999, current value: 3334445, caret at end: (333) 444-5|___
- * <backspace> should make it do this: (333) 444|-____
- * 3: 
- * format (999) 999-9999, current value: 3, caret at end: (3|__) ___-____
- * <backspace> should make it do this: (|___) ___-____
- * 4: 
- * format (999) 999-9999, current value: "", caret at end: (|___) ___-____
- * <backspace> should make it do this: (|___) ___-____
- * 5: 
- * format (999) 999-9999, current value: 3334445555, caret at end: (333) 444-5555|
- * click for caret like this: (333) 444-|5555
- * should immediately move caret like this: (333) 444|-5555
- * 6: 
- * format (999) 999-9999, current value: 3334445555, caret at end: (333) 444-5555|
- * <delete> should do this: (333) 444-5555|
- * 7: 
- * format (999) 999-9999, current value: 3334445555, caret at beginning: (|333) 444-5555
- * <delete> should do this: (|334) 445-555_
- * 8:
- * format (999) 999-9999, current value: 334445555, caret at beginning: (|334) 445-555_
- * type '6' should do this: (|633) 444-5555
- * 9: 
- * format (999) 999-9999, current value: 3334445555, caret at end: (333) 444-5555|
- * type '6' should do this: (333) 444-5555|
- * 10: 
- * format (999) 999-9999, current value: 3334445555, caret at beginning: (|333) 444-5555
- * type '6' should do this: (6|33) 344-4555
- * 11: 
- * format (999) 999-9999, current value: 3334445555, caret at beginning: (|333) 444-5555
- * type 'x' should do this: (3|33) 444-5555
- * 12: 
- * format (999) 999-9999, current value: '', caret at beginning: (|___) ___-____
- * press and hold '3' should do this: (333) 333-3333|
- * also, caret should move right and stop at end. it should not jump back to the left when it has reached 
- * the right edge
- */
 @customAttribute('masked')
 @inject(Element)
 export class MaskedInput {
@@ -76,7 +34,6 @@ export class MaskedInput {
 
 
     constructor(element: Element) {
-        console.info("mask constructor");
         this.isAttached = false;
         this.element = element;
         this.preventBackspace = false;
@@ -88,7 +45,6 @@ export class MaskedInput {
     }
 
     bind() {
-        console.info("mask bind");
         this.masker = getMasker(this.mask, this.bindMasking, this.placeholder);
         this.oldValue = this.masker.maskValue(this.value);
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
@@ -96,7 +52,6 @@ export class MaskedInput {
 
     attached() {
         this.isAttached = true;
-        console.info("mask attached");
         this.inputElement = (<HTMLInputElement>this.element);
         this.inputElement.addEventListener("keydown", this.keyDownHandler);
         this.inputElement.addEventListener('keyup', this.keyUpHandler);

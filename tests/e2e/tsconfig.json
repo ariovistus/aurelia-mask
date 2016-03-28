@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "jsx": "react",
+        "noImplicitAny": false,
+        "sourceMap": true
+    },
+    "filesGlob": [
+        "../../jspm_packages/**/*.d.ts",
+        "../../jspm_packages/npm/protractor@3.2.2/typings/**/*.d.ts",
+        "../jasmine/**/*.d.ts",
+        "src/*.ts"
+    ]
+}

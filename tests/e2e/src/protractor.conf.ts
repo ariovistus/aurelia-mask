@@ -8,7 +8,7 @@ export var config = {
   },
 
   //seleniumAddress: 'http://0.0.0.0:4444',
-  specs: ['protractor_tests/*.js'],
+  specs: ['*.spec.js'],
 
   plugins: [{
     path: 'aurelia.protractor.js'

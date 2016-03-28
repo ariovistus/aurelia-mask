@@ -16,34 +16,34 @@
             <tr>
                 <td> simple: </td>
                 <td>
-                    <input masked="value.bind: value1; mask.bind: mask;"/>
+                    <input id='input1' masked="value.bind: value1; mask.bind: mask;"/>
                 </td>
                 <td> ${value1} </td>
-                <td> <button click.trigger="update1()">Update</button> </td>
+                <td> <button id='update1' click.trigger="update1()">Update</button> </td>
             </tr>
             <tr>
                 <td> bind masking: </td>
                 <td>
-                    <input masked="value.bind: value2; mask.bind: mask; bind-masking: true;"/>
+                    <input id='input2' masked="value.bind: value2; mask.bind: mask; bind-masking: true;"/>
                 </td>
                 <td> ${value2} </td>
-                <td> <button click.trigger="update2()">Update</button> </td>
+                <td> <button id='update2' click.trigger="update2()">Update</button> </td>
             </tr>
             <tr>
                 <td> custom placeholder: </td>
                 <td>
-                    <input masked="value.bind: value3; mask.bind: mask; placeholder: *;"/>
+                    <input id='input3' masked="value.bind: value3; mask.bind: mask; placeholder: *;"/>
                 </td>
                 <td> ${value3} </td>
-                <td> <button click.trigger="update3()">Update</button> </td>
+                <td> <button id='update3' click.trigger="update3()">Update</button> </td>
             </tr>
             <tr>
                 <td> (space) placeholder: </td>
                 <td>
-                    <input masked="value.bind: value4; mask.bind: mask; placeholder: space;"/>
+                    <input id='input4' masked="value.bind: value4; mask.bind: mask; placeholder: space;"/>
                 </td>
                 <td> ${value4} </td>
-                <td> <button click.trigger="update4()">Update</button> </td>
+                <td> <button id='update4' click.trigger="update4()">Update</button> </td>
             </tr>
         </tbody>
     </table>

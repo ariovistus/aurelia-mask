@@ -12,17 +12,19 @@
       "aurelia-pal-browser": "npm:aurelia-pal-browser@^1.0.0-beta.1.2.0",
       "aurelia-templating": "npm:aurelia-templating@^1.0.0-beta.1.2.0",
       "jquery": "npm:jquery@^2.2.2",
+      "protractor": "npm:protractor@^3.2.2",
       "typescript": "npm:typescript@^1.7.5"
     }
   },
   "devDependencies": {
-    "karma": "~0.13.19",
-    "karma-jspm": "~2.0.2",
     "jasmine-core": "~2.4.1",
-    "karma-jasmine": "~0.3.6",
+    "karma": "~0.13.19",
     "karma-chrome-launcher": "~0.2.2",
     "karma-coverage": "~0.5.3",
+    "karma-jasmine": "~0.3.6",
+    "karma-jspm": "~2.0.2",
     "karma-typescript-preprocessor": "0.0.21",
+    "protractor": "^3.2.2",
     "typescript": "~1.7.5"
   }
 }
