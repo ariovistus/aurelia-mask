@@ -1,16 +1,14 @@
-﻿import {getMasker} from "./masker";
-
+import { getMasker } from "./masker";
 export class MaskValueConverter {
-    toView(value: string, format: string, maskBinding: boolean, placeholder: string): string {
+    toView(value, format, maskBinding, placeholder) {
         var masker = getMasker(format, maskBinding, placeholder);
         var result = masker.maskValue(value);
         return result;
     }
-    fromView(value: string, format: string, maskBinding: boolean, placeholder: string): string {
+    fromView(value, format, maskBinding, placeholder) {
         var masker = getMasker(format, maskBinding, placeholder);
         var result = masker.unmaskValue(value);
         return result;
     }
 }
-
-
+//# sourceMappingURL=mask.js.map

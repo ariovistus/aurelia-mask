@@ -26,5 +26,8 @@
     "karma-typescript-preprocessor": "0.0.21",
     "protractor": "^3.2.2",
     "typescript": "~1.7.5"
+  },
+  "directories": {
+      "lib": "dist"
   }
 }

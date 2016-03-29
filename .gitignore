@@ -7,5 +7,4 @@ src/*.js
 src/*.js.map
 tests/e2e/dest/*
 tests/unit/dest/*
-sample/src/plugins/masked-input/*.js
-sample/src/plugins/masked-input/*.html
+sample/src/plugins/

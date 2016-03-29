@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "es6",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "jsx": "react",
+        "noImplicitAny": false,
+        "sourceMap": true
+    },
+    "files": [
+        "./typings/aurelia/aurelia-animator-css.d.ts",
+        "./typings/aurelia/aurelia-binding.d.ts",
+        "./typings/aurelia/aurelia-bootstrapper.d.ts",
+        "./typings/aurelia/aurelia-dependency-injection.d.ts",
+        "./typings/aurelia/aurelia-event-aggregator.d.ts",
+        "./typings/aurelia/aurelia-fetch-client.d.ts",
+        "./typings/aurelia/aurelia-framework.d.ts",
+        "./typings/aurelia/aurelia-history-browser.d.ts",
+        "./typings/aurelia/aurelia-history.d.ts",
+        "./typings/aurelia/aurelia-loader-default.d.ts",
+        "./typings/aurelia/aurelia-loader.d.ts",
+        "./typings/aurelia/aurelia-logging-console.d.ts",
+        "./typings/aurelia/aurelia-logging.d.ts",
+        "./typings/aurelia/aurelia-metadata.d.ts",
+        "./typings/aurelia/aurelia-pal-browser.d.ts",
+        "./typings/aurelia/aurelia-pal.d.ts",
+        "./typings/aurelia/aurelia-path.d.ts",
+        "./typings/aurelia/aurelia-route-recognizer.d.ts",
+        "./typings/aurelia/aurelia-router.d.ts",
+        "./typings/aurelia/aurelia-task-queue.d.ts",
+        "./typings/aurelia/aurelia-templating-binding.d.ts",
+        "./typings/aurelia/aurelia-templating-resources.d.ts",
+        "./typings/aurelia/aurelia-templating-router.d.ts",
+        "./typings/aurelia/aurelia-templating.d.ts",
+        "./src/index.ts",
+        "./src/masker.ts",
+        "./src/mask.ts",
+        "./src/masked-input.ts"
+    ]
+}
