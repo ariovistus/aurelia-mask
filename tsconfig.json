@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "module": "es6",
+        "target": "es5",
+        "module": "system",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "removeComments": true,
@@ -11,6 +11,7 @@
         "sourceMap": true
     },
     "files": [
+        "./typings/es6-shim/es6-shim.d.ts",
         "./typings/aurelia/aurelia-animator-css.d.ts",
         "./typings/aurelia/aurelia-binding.d.ts",
         "./typings/aurelia/aurelia-bootstrapper.d.ts",

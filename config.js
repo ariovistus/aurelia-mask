@@ -39,6 +39,7 @@ System.config({
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.0.0-beta.1.2.0",
     "aurelia-polyfills": "npm:aurelia-polyfills@1.0.0-beta.1.1.0",
     "aurelia-templating": "npm:aurelia-templating@1.0.0-beta.1.2.0",
+    "es6-shim": "github:es-shims/es6-shim@0.35.0",
     "jquery": "npm:jquery@2.2.2",
     "protractor": "npm:protractor@3.2.2",
     "ts": "github:frankwallis/plugin-typescript@2.5.1",
