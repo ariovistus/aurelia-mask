@@ -29,9 +29,9 @@ notes
 
 - do not apply a value binding to the input, that will interfere with the plumbing
 - mask has the same format as default ui-mask
--- 9 -> number
--- a -> alpha
--- * -> number or alpha
+  - 9 → number
+  - a → alpha
+  - * → number or alpha
 
 
 ## Options
