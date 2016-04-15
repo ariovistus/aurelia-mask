@@ -28,6 +28,10 @@ in your template:
 notes
 
 - do not apply a value binding to the input, that will interfere with the plumbing
+```
+    <!-- bad! -->
+    <input masked="..." value.bind="myvalue" />
+```
 - mask has the same format as default ui-mask
   - 9 → number
   - a → alpha
