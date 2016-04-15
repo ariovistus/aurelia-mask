@@ -1,0 +1,9 @@
+addons:
+    sauce_connect:
+        username: "ariovistus"
+        access_key: 
+            secure: "bOIq8VREWxvpS86D6/61F0MrXXYciQ4XQ9o0B4izum5nEbIJ+9RJtYQ1+oEqmO4IXookXLg7LTdr++DA0YEo6MahN+FGtn4J/xgKbm2c6nfrOfGexv4ns6EwgI+l4HCe8rYd+wAcb3gtyf1Hx2lExSkfQyHSkcNIIf1Jl5M/XgdK0CtKkL7peN1VGJN+U5nuQclLpVteeYf+cpoUBoiakZR1NkB4NEvL7qFDU95Ms4YvqTJWXXKM9pQKreRlgcs4n46+7K7519fAQ+MLrMT9xYhYCYCdWsw3t3fDVBBaQF7FxsQP9hz0uPVdXixx4k198IQ727kHacxf5OBFcBFvw+D5MEU+SJI0XTzJL+JlxdUpYAhIRKowGRUkpafzz80q7LqBxCBmhFQcHukTVAK5APL2Wxum6sUZBQhz40gPlE1GwjCSAiPxhd6q8B4YAPxzhxicJoVgVxupVWDOI7qgGPvRnD5ob5zEA76CWwDyxtf9PDrH/RuwedDQKIw3JKlIjni1k7ekgNIrTVXrIEcRFfdHFP3LeLS67FPvxtVusOBApogqxLsAiCErGfokeqzti42B2QX3MUp6fEdKR21gAJ8Qc/0cw94dcvBuyyVXGQJG0o/NrwrADIZN6z/uUiyPbxqY+DHkblwdYb+avti7aUNhmwRNzdZx+keAAQNAjH4="
+
+script:
+    - echo "username: $SAUCE_USERNAME"
+    - echo "job #: $TRAVIS_JOB_NUMBER"

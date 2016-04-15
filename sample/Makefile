@@ -1,35 +1,17 @@
-TS = masked-input.ts masker.ts index.ts mask.ts
-HTML = masked-input.html
+NPM = ./node_modules
 
-ODIR = src/plugins/masked-input
-SDIR = ../src
+JSPM = ./jspm_packages
 
-TSS = $(TS:%=$(SDIR)/%)
-JSS = $(TS:%.ts=$(SDIR)/%.js)
-JSO = $(TS:%.ts=$(ODIR)/%.js)
-HTMLS = $(HTML:%=$(SDIR)/%)
-HTMLO = $(HTML:%=$(ODIR)/%)
+all: 
+	rm src/plugins/masked-input -rf
+	mkdir -p src/plugins/masked-input 
+	cp ../dist/* src/plugins/masked-input
 
+serve: $(NPM) $(JSPM)
+	./node_modules/.bin/http-server -c-1
 
-all: js html
+$(NPM):
+	npm install
 
-js: $(JSO)
-
-$(JSO): $(JSS)
-	cp $(JSS) $(ODIR)
-	rm -f $(SDIR)/*.js
-	rm -f $(SDIR)/*.map
-
-$(JSS): $(TSS)
-	./node_modules/.bin/tsc -p $(ODIR)
-
-html: $(HTMLO)
-
-$(HTMLO): $(HTMLS)
-	cp $(HTMLS) $(ODIR)
-clean:
-	rm -f $(HTMLO)
-	rm -f $(ODIR)/*.js
-	rm -f $(ODIR)/*.map
-	rm -f $(SDIR)/*.js
-	rm -f $(SDIR)/*.map
+$(JSPM): $(NPM)
+	./node_modules/.bin/jspm install
