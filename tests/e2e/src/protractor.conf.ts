@@ -1,5 +1,6 @@
-// An example configuration file.
 export var config = {
+  sauceUser: process.env.SAUCE_USERNAME,
+  sauceKey: process.env.SAUCE_ACCESS_KEY,
   directConnect: true,
 
   // Capabilities to be passed to the webdriver instance.
