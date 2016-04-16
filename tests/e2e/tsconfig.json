@@ -11,9 +11,15 @@
         "sourceMap": true
     },
     "filesGlob": [
-        "../../jspm_packages/**/*.d.ts",
-        "../../jspm_packages/npm/protractor@3.2.2/typings/**/*.d.ts",
         "../jasmine/**/*.d.ts",
+        "../../typings/angular-protractor/*.d.ts",
         "src/*.ts"
+    ],
+    "files": [
+        "../jasmine/jasmine.d.ts",
+        "../../typings/angular-protractor/angular-protractor.d.ts",
+        "src/aurelia.protractor.ts",
+        "src/masked-input.spec.ts",
+        "src/protractor.conf.ts"
     ]
 }

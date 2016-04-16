@@ -6,6 +6,7 @@
       "lib": "dist"
     },
     "dependencies": {
+      "ansi-styles": "npm:ansi-styles@^2.2.1",
       "aurelia-polyfills": "npm:aurelia-polyfills@^1.0.0-beta.1.1.0",
       "ts": "github:frankwallis/plugin-typescript@^2.5.1"
     },
@@ -29,6 +30,7 @@
     "karma-jspm": "~2.0.2",
     "karma-typescript-preprocessor": "0.0.21",
     "protractor": "^3.2.2",
+    "tsconfig-glob": "^0.4.3",
     "typescript": "~1.7.5"
   },
   "directories": {

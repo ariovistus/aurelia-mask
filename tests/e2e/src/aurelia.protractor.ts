@@ -42,8 +42,9 @@ function waitForRouterComplete() {
   });
 }
 
+
 /* Plugin hooks */
-exports.setup = function(config) {
+export var setup = function(config) {
   // Ignore the default Angular synchronization helpers
   browser.ignoreSynchronization = true;
 
@@ -51,11 +52,11 @@ exports.setup = function(config) {
   addValueBindLocator();
 
   // attach a new way to browser.get a page and wait for Aurelia to complete loading
-  browser.loadAndWaitForAureliaPage = loadAndWaitForAureliaPage;
+  browser['loadAndWaitForAureliaPage'] = loadAndWaitForAureliaPage;
 
   // wait for router navigations to complete
-  browser.waitForRouterComplete = waitForRouterComplete;
+  browser['waitForRouterComplete'] = waitForRouterComplete;
 };
 
-exports.teardown = function(config) {};
-exports.postResults = function(config) {};
+export var teardown = function(config) {};
+export var postResults = function(config) {};

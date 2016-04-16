@@ -1,5 +1,3 @@
-/// <reference path="../../jasmine/jasmine.d.ts" />
-
 function getCursor(inputElement) {
     return browser.executeScript("return arguments[0].selectionStart;", inputElement.getWebElement());
 }
@@ -10,7 +8,7 @@ function setCursor(inputElement, index) {
 
 describe("masked input", () => {
     beforeEach( () => {
-        browser.loadAndWaitForAureliaPage("http://127.0.0.1:8080/");
+        browser['loadAndWaitForAureliaPage']("http://127.0.0.1:8080/");
     });
 
     it("should behave with arrow keys", () => {
