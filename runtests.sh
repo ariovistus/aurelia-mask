@@ -1,6 +1,6 @@
 #!/bin/bash
 make
-cd samples
+cd sample
 make
 make serve &
 cd ..
