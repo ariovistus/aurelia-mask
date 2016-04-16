@@ -1,11 +1,11 @@
 export var config = {
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
-  directConnect: true,
 
   // Capabilities to be passed to the webdriver instance.
   capabilities: {
-    'browserName': 'chrome'
+      'browserName': 'chrome',
+      'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER
   },
 
   //seleniumAddress: 'http://0.0.0.0:4444',
