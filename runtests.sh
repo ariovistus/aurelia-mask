@@ -5,5 +5,5 @@ make
 make serve &
 cd ..
 ./node_modules/.bin/webdriver-manager update
-sleep 30s
+sleep 50s
 make protractor-run
