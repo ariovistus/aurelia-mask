@@ -19,7 +19,7 @@
                     <input id='input1' masked="value.bind: value1; mask.bind: mask;"/>
                 </td>
                 <td> ${value1} </td>
-                <td> <button id='update1' click.trigger="update1()">Update</button> </td>
+                <td> <button id='update1' click.trigger="update(1)">Update</button> </td>
             </tr>
             <tr>
                 <td> bind masking: </td>
@@ -27,7 +27,7 @@
                     <input id='input2' masked="value.bind: value2; mask.bind: mask; bind-masking: true;"/>
                 </td>
                 <td> ${value2} </td>
-                <td> <button id='update2' click.trigger="update2()">Update</button> </td>
+                <td> <button id='update2' click.trigger="update(2)">Update</button> </td>
             </tr>
             <tr>
                 <td> custom placeholder: </td>
@@ -35,7 +35,7 @@
                     <input id='input3' masked="value.bind: value3; mask.bind: mask; placeholder: *;"/>
                 </td>
                 <td> ${value3} </td>
-                <td> <button id='update3' click.trigger="update3()">Update</button> </td>
+                <td> <button id='update3' click.trigger="update(3)">Update</button> </td>
             </tr>
             <tr>
                 <td> (space) placeholder: </td>
@@ -43,7 +43,23 @@
                     <input id='input4' masked="value.bind: value4; mask.bind: mask; placeholder: space;"/>
                 </td>
                 <td> ${value4} </td>
-                <td> <button id='update4' click.trigger="update4()">Update</button> </td>
+                <td> <button id='update4' click.trigger="update(4)">Update</button> </td>
+            </tr>
+            <tr>
+                <td> overtype mode: </td>
+                <td>
+                    <input id='input5' masked="value.bind: value5; mask.bind: mask; edit-mode: overtype"/>
+                </td>
+                <td> ${value5} </td>
+                <td> <button id='update5' click.trigger="update(5)">Update</button> </td>
+            </tr>
+            <tr>
+                <td title="don't really know what to call this, but I've seen it in asp.net controls"> aspnet style: </td>
+                <td>
+                    <input id='input6' masked="value.bind: value6; mask.bind: mask; edit-mode: overtype"/>
+                </td>
+                <td> ${value6} </td>
+                <td> <button id='update6' click.trigger="update(6)">Update</button> </td>
             </tr>
         </tbody>
     </table>

@@ -22,27 +22,21 @@ module.exports = function(config) {
 
     jspm: {
         loadFiles: [
-            'tests/unit/src/masker.spec.ts',
-            'tests/unit/src/masked-input.spec.ts'
+            'tests/unit/dest/masker.spec.js',
+            'tests/unit/dest/masked-input.spec.js'
         ],
         serveFiles: [
-            '**/*.ts',
-            '**/*.json'
+            '**/*.js',
         ],
         defaultJSExtensions: true
     },
 
     proxies: {
         '/jspm_packages': '/base/jspm_packages',
-        '/src': '/base/src',
+        '/src': '/base/dist',
         '/typings': '/base/typings',
         '/tests': '/base/tests'
     },
-
-    //preprocessors: {
-        //'src/**/*.ts': ['coverage']
-    //},
-
 
     reporters: ['progress', 'coverage'],
 

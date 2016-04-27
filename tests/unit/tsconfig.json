@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "jsx": "react",
+        "noImplicitAny": false,
+        "sourceMap": true
+    },
+    "filesGlob": [
+        "../jasmine/**/*.d.ts",
+        "../../typings/node/*.d.ts",
+        "src/*.ts"
+    ],
+    "files": [
+        "../jasmine/jasmine.d.ts",
+        "../../typings/node/node-0.8.8.d.ts",
+        "src/masked-input.spec.ts",
+        "src/masker.spec.ts"
+    ]
+}

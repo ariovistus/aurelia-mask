@@ -1,26 +1,30 @@
 System.register([], function(exports_1) {
     var _maskers, maskDefinitions, Masker;
-    function getMasker(format, bindMasking, _placeholder) {
+    function getMasker(format, bindMasking, _placeholder, aspnetMasking) {
         if (_placeholder === void 0) { _placeholder = null; }
+        if (aspnetMasking === void 0) { aspnetMasking = false; }
         var maskers = _maskers;
-        var bindPlaceholdersIx = bindMasking ? 1 : 0;
         var placeholder = _placeholder || "_";
-        if (!maskers[bindPlaceholdersIx]) {
-            maskers[bindPlaceholdersIx] = {};
+        bindMasking = !!bindMasking;
+        aspnetMasking = !!aspnetMasking;
+        var key = {
+            maskFormat: format,
+            bindMasking: bindMasking,
+            placeholder: placeholder,
+            aspnetMasking: aspnetMasking
+        };
+        var strkey = JSON.stringify(key);
+        if (!maskers[strkey]) {
+            maskers[strkey] = new Masker(key);
         }
-        maskers = maskers[bindPlaceholdersIx];
-        if (!maskers[placeholder]) {
-            maskers[placeholder] = {};
-        }
-        maskers = maskers[placeholder];
-        if (!maskers[format]) {
-            maskers[format] = new Masker(format, bindMasking, placeholder);
-        }
-        return maskers[format];
+        return maskers[strkey];
     }
     exports_1("getMasker", getMasker);
     function isNumeric(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    function deleteChars(s, ch) {
+        return s.split(ch).join("");
     }
     function isString(myVar) {
         return (typeof myVar === 'string' || myVar instanceof String);
@@ -28,33 +32,42 @@ System.register([], function(exports_1) {
     return {
         setters:[],
         execute: function() {
-            _maskers = {};
+            _maskers = new Map();
             maskDefinitions = {
                 '9': /\d/,
                 'A': /[a-zA-Z]/,
                 '*': /[a-zA-Z0-9]/
             };
             Masker = (function () {
-                function Masker(maskFormat, bindMasking, placeholder) {
-                    this.maskFormat = maskFormat;
-                    this.bindMasking = bindMasking;
+                function Masker(options) {
+                    this.maskFormat = options.maskFormat;
+                    this.bindMasking = options.bindMasking;
+                    this.aspnetMasking = options.aspnetMasking;
                     this.maskCaretMap = [];
                     this.maskPatterns = [];
                     this.maskPlaceholder = '';
                     this.minRequiredLength = 0;
                     this.maskComponents = null;
                     this.maskProcessed = false;
-                    this.placeholder = placeholder;
+                    this.placeholder = options.placeholder;
                     this.processRawMask();
                 }
                 Masker.prototype.unmaskValue = function (value) {
-                    if (this.bindMasking) {
+                    if (this.aspnetMasking) {
+                        var result = this._maskValue2(value);
+                        return result;
+                    }
+                    else if (this.bindMasking) {
                         return this._maskValue(value, true);
                     }
                     return this._unmaskValue(value);
                 };
                 Masker.prototype.maskValue = function (unmaskedValue) {
-                    if (isNumeric(unmaskedValue)) {
+                    if (this.aspnetMasking) {
+                        var result = this._maskValue2(unmaskedValue);
+                        return result;
+                    }
+                    else if (isNumeric(unmaskedValue)) {
                         unmaskedValue = "" + unmaskedValue;
                     }
                     return this._maskValue(unmaskedValue, false);
@@ -67,7 +80,11 @@ System.register([], function(exports_1) {
                     else if (isNumeric(value)) {
                         valueLength = ("" + value).length;
                     }
-                    if (this.bindMasking) {
+                    if (this.aspnetMasking) {
+                        var caretPosMax = this.maskCaretMap.slice().pop();
+                        return caretPosMax;
+                    }
+                    else if (this.bindMasking) {
                         if (this.maskCaretMap.indexOf(valueLength) != -1 ||
                             valueLength === this.maskFormat.length) {
                             return valueLength;
@@ -155,6 +172,59 @@ System.register([], function(exports_1) {
                         }
                     });
                     return valueMasked;
+                };
+                Masker.prototype._maskValue2 = function (unmaskedValue) {
+                    var input = unmaskedValue || '';
+                    var valueMasked = '', maskCaretMapCopy = this.maskCaretMap.slice(), maskPatternsCopy = this.maskPatterns.slice();
+                    maskCaretMapCopy.pop();
+                    var placeholder = this.placeholder;
+                    function putMaybe(chr) {
+                        valueMasked += chr;
+                    }
+                    function putNextInput() {
+                        valueMasked += input.charAt(0);
+                    }
+                    function nextCharMatches() {
+                        if (input.charAt(0) == placeholder)
+                            return true;
+                        return maskPatternsCopy[0].test(input.charAt(0));
+                    }
+                    function advanceInput() {
+                        input = input.substr(1);
+                    }
+                    function advanceCaretMap() {
+                        maskCaretMapCopy.shift();
+                    }
+                    function advancePatterns() {
+                        maskPatternsCopy.shift();
+                    }
+                    this.maskPlaceholder.split('').forEach(function (chr, i) {
+                        if (input.length > 0 && i === maskCaretMapCopy[0]) {
+                            if (maskPatternsCopy.length && nextCharMatches()) {
+                                putNextInput();
+                                advanceCaretMap();
+                                advancePatterns();
+                            }
+                            else {
+                                putMaybe(chr);
+                                maskCaretMapCopy.shift();
+                            }
+                            advanceInput();
+                        }
+                        else {
+                            while (input.length > 0 && input.charAt(0) === placeholder) {
+                                advanceInput();
+                            }
+                            if (input.length > 0 && input.charAt(0) === chr) {
+                                advanceInput();
+                            }
+                            putMaybe(chr);
+                        }
+                    });
+                    return valueMasked;
+                };
+                Masker.prototype.stripPlaceholders = function (masked) {
+                    return deleteChars(masked, this.placeholder);
                 };
                 Masker.prototype.processRawMask = function () {
                     var _this = this;

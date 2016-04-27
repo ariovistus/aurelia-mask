@@ -49,6 +49,7 @@ describe("Masker", () => {
         {result: "a12",         input: "(a) 1 2", fmt: "(A) * 9"},
         {result: "a1",          input: "(a) 1 L", fmt: "(A) * 9"},
     ];
+    
 
     it("should mask values", () => {
         for(var tst of mask_data) {
@@ -135,6 +136,7 @@ describe("Masker", () => {
             expect(masker.maxCaretPos(tst.value)).toBe(caretPos)
         }
     });
+    
     it("should work with numbers", () => {
         var masker = getMasker("99", false);
         expect(masker.maskValue(12)).toBe("12");
@@ -172,6 +174,45 @@ describe("Masker", () => {
             var masker = getMasker(tst.mask, false, tst.placeholder);
             expect(masker.maskValue(tst.input)).toBe(tst.result);
         }
+    });
+
+    it("should work with aspnet binding mode", () => {
+        let masker = getMasker("/999/99/9999/", false, null, true);
+        expect(masker.maskCaretMap).toEqual([1,2,3,5,6,8,9,10,11, 12]);
+
+        expect(masker.maskValue("1")).toBe("/1__/__/____/");
+        expect(masker.maskValue("/1__/__/____/")).toBe("/1__/__/____/");
+        expect(masker.maskValue("/1___/__/____/")).toBe("/1__/__/____/");
+        expect(masker.maskValue("/_1_/__/____/")).toBe("/_1_/__/____/");
+        expect(masker.maskValue("/_1__/__/____/")).toBe("/_1_/__/____/");
+        expect(masker.maskValue("/__1/__/____/")).toBe("/__1/__/____/");
+        expect(masker.maskValue("/__1_/__/____/")).toBe("/__1/__/____/");
+        expect(masker.maskValue("/___/1_/____/")).toBe("/___/1_/____/");
+        expect(masker.maskValue("/___/1__/____/")).toBe("/___/1_/____/");
+        expect(masker.maskValue("/___/_1/____/")).toBe("/___/_1/____/");
+        expect(masker.maskValue("/___/_1_/____/")).toBe("/___/_1/____/");
+        expect(masker.maskValue("/___/__/1___/")).toBe("/___/__/1___/");
+        expect(masker.maskValue("/___/__/1____/")).toBe("/___/__/1___/");
+        expect(masker.maskValue("/___/__/_1__/")).toBe("/___/__/_1__/");
+        expect(masker.maskValue("/___/__/_1___/")).toBe("/___/__/_1__/");
+        expect(masker.maskValue("/___/__/__1_/")).toBe("/___/__/__1_/");
+        expect(masker.maskValue("/___/__/__1__/")).toBe("/___/__/__1_/");
+        expect(masker.maskValue("/___/__/___1/")).toBe("/___/__/___1/");
+        expect(masker.maskValue("/___/__/___1_/")).toBe("/___/__/___1/");
+
+        expect(masker.maskValue("/__12/__/____/")).toBe("/__1/2_/____/");
+        expect(masker.maskValue("/__1/2_/____/")).toBe("/__1/2_/____/");
+        expect(masker.maskValue("/__1_/2_/____/")).toBe("/__1/2_/____/");
+
+        expect(masker.unmaskValue("")).toBe("/___/__/____/");
+        expect(masker.unmaskValue("////")).toBe("/___/__/____/");
+        expect(masker.unmaskValue("/___/__/____/")).toBe("/___/__/____/");
+        expect(masker.unmaskValue("/9__/__/____/")).toBe("/9__/__/____/");
+        expect(masker.unmaskValue("/_9_/__/____/")).toBe("/_9_/__/____/");
+        expect(masker.unmaskValue("/__9/__/____/")).toBe("/__9/__/____/");
+        expect(masker.unmaskValue("/___/_8/____/")).toBe("/___/_8/____/");
+        expect(masker.unmaskValue("/___/__/__7_/")).toBe("/___/__/__7_/");
+        expect(masker.unmaskValue("/___/__/6__7_/")).toBe("/___/__/6__7/");
     });
 });
 

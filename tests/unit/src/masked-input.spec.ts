@@ -52,6 +52,7 @@ function setCursor(inputElement, index) {
 }
 
 describe ("MaskedInput", () => {
+    
     it("should do things on things", () => {
         initialize();
         // type '1', '2', 'left', 'left', 'v' should result in '12'

@@ -8,7 +8,9 @@ export declare class MaskedInput {
     inputClass: string;
     disabled: boolean;
     bindMasking: boolean;
+    aspnetMasking: boolean;
     placeholder: string;
+    editMode: string;
     masker: Masker;
     preventBackspace: boolean;
     oldValue: string;
@@ -32,6 +34,7 @@ export declare class MaskedInput {
     unmaskedUIValue: string;
     unmaskedModelValue: string;
     isAddition(): boolean;
+    isSingleAddition(): boolean;
     isDeletion(): boolean;
     onInput(e: any): void;
     onFocus(e: any): void;
@@ -45,5 +48,5 @@ export declare class MaskedInput {
     isFocused(): boolean;
     isHidden(): boolean;
     maskChanged(): void;
-    valueChanged(): void;
+    valueChanged(newv: any, oldv: any): void;
 }

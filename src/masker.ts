@@ -1,25 +1,24 @@
-﻿export function getMasker(format: string, bindMasking: boolean, _placeholder: string = null): Masker {
-    let maskers = _maskers;
-    let bindPlaceholdersIx = bindMasking ? 1 : 0;
+﻿export function getMasker(format: string, bindMasking: boolean, _placeholder: string = null, aspnetMasking: boolean = false): Masker {
+    let maskers : Map<any, Masker> = _maskers;
     let placeholder = _placeholder || "_";
-    if(!maskers[bindPlaceholdersIx]) {
-        maskers[bindPlaceholdersIx] = {};
-    }
-    maskers = maskers[bindPlaceholdersIx];
+    bindMasking = !!bindMasking;
+    aspnetMasking = !!aspnetMasking;
 
-    if(!maskers[placeholder]) {
-        maskers[placeholder] = {};
+    let key = {
+        maskFormat: format,
+        bindMasking: bindMasking,
+        placeholder: placeholder,
+        aspnetMasking: aspnetMasking
     }
-    maskers = maskers[placeholder];
-
-    if (!maskers[format]) {
-        maskers[format] = new Masker(format, bindMasking, placeholder);
+    let strkey = JSON.stringify(key);
+    if (!maskers[strkey]) {
+        maskers[strkey] = new Masker(key);
     }
-    return maskers[format];
+    return maskers[strkey];
 }
 
 
-var _maskers = {};
+var _maskers = new Map<any, Masker>();
 var maskDefinitions = {
     '9': /\d/,
     'A': /[a-zA-Z]/,
@@ -28,6 +27,10 @@ var maskDefinitions = {
 // from http://stackoverflow.com/a/9716488/23648
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function deleteChars(s: string, ch: string): string {
+    return s.split(ch).join("");
 }
 
 export class Masker {
@@ -39,30 +42,38 @@ export class Masker {
     maskComponents: any;
     maskProcessed: boolean;
     bindMasking: boolean;
+    aspnetMasking: boolean;
     placeholder: string;
 
-    constructor(maskFormat: string, bindMasking: boolean, placeholder: string) {
-        this.maskFormat = maskFormat;
-        this.bindMasking = bindMasking;
+    constructor(options) {
+        this.maskFormat = options.maskFormat;
+        this.bindMasking = options.bindMasking;
+        this.aspnetMasking = options.aspnetMasking;
         this.maskCaretMap = [];
         this.maskPatterns = [];
         this.maskPlaceholder = '';
         this.minRequiredLength = 0;
         this.maskComponents = null;
         this.maskProcessed = false;
-        this.placeholder = placeholder;
+        this.placeholder = options.placeholder;
         this.processRawMask();
     }
 
     unmaskValue(value) {
-        if(this.bindMasking) {
+        if(this.aspnetMasking) {
+            let result = this._maskValue2(value);
+            return result;
+        }else if(this.bindMasking) {
             return this._maskValue(value, true);
         }
         return this._unmaskValue(value);
     }
 
     maskValue(unmaskedValue) {
-        if(isNumeric(unmaskedValue)) {
+        if(this.aspnetMasking) {
+            let result = this._maskValue2(unmaskedValue);
+            return result;
+        }else if(isNumeric(unmaskedValue)) {
             unmaskedValue = ""+unmaskedValue;
         }
         return this._maskValue(unmaskedValue, false);
@@ -75,7 +86,10 @@ export class Masker {
         }else if(isNumeric(value)) {
             valueLength = (""+value).length;
         }
-        if(this.bindMasking) {
+        if(this.aspnetMasking) {
+            let caretPosMax = this.maskCaretMap.slice().pop();
+            return caretPosMax;
+        }else if(this.bindMasking) {
             if(this.maskCaretMap.indexOf(valueLength) != -1 || 
                 valueLength === this.maskFormat.length) {
                 return valueLength;
@@ -177,6 +191,67 @@ export class Masker {
             }
         });
         return valueMasked;
+    }
+
+    _maskValue2(unmaskedValue: string) {
+        let input = unmaskedValue || '';
+        var valueMasked = '',
+            maskCaretMapCopy = this.maskCaretMap.slice(),
+            maskPatternsCopy = this.maskPatterns.slice();
+        maskCaretMapCopy.pop(); //don't want that last position
+        var placeholder = this.placeholder;
+
+        function putMaybe(chr) {
+            valueMasked += chr;
+        }
+
+        function putNextInput() {
+            valueMasked += input.charAt(0);
+        }
+
+        function nextCharMatches() {
+            if(input.charAt(0) == placeholder) return true;
+            return maskPatternsCopy[0].test(input.charAt(0));
+        }
+
+        function advanceInput() {
+            input = input.substr(1);
+        }
+
+        function advanceCaretMap() {
+            maskCaretMapCopy.shift();
+        }
+
+        function advancePatterns() {
+            maskPatternsCopy.shift();
+        }
+
+        this.maskPlaceholder.split('').forEach(function (chr, i) {
+            if (input.length > 0 && i === maskCaretMapCopy[0]) {
+                if(maskPatternsCopy.length && nextCharMatches()) {
+                    putNextInput();
+                    advanceCaretMap();
+                    advancePatterns();
+                }else{
+                    putMaybe(chr);
+                    maskCaretMapCopy.shift();
+                }
+                advanceInput();
+            }else{
+                while(input.length > 0 && input.charAt(0) === placeholder) {
+                    advanceInput();
+                }
+                if (input.length > 0 && input.charAt(0) === chr) {
+                    advanceInput();
+                }
+                putMaybe(chr);
+            }
+        });
+        return valueMasked;
+    }
+
+    stripPlaceholders(masked) {
+        return deleteChars(masked, this.placeholder);
     }
 
     processRawMask() {

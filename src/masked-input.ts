@@ -12,7 +12,9 @@ export class MaskedInput {
     @bindable inputClass: string;
     @bindable disabled: boolean;
     @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: false}) bindMasking: boolean
+    @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: false}) aspnetMasking: boolean
     @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: null}) placeholder: string;
+    @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: "insert"}) editMode: string;
 
     masker: Masker;
     preventBackspace: boolean;
@@ -43,7 +45,7 @@ export class MaskedInput {
     }
 
     bind() {
-        this.masker = getMasker(this.mask, this.bindMasking, this.placeholder);
+        this.masker = getMasker(this.mask, this.bindMasking, this.placeholder, this.aspnetMasking);
         this.oldValue = this.masker.maskValue(this.value);
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     }
@@ -148,9 +150,21 @@ export class MaskedInput {
         return _isAddition;
     }
 
+    isSingleAddition() {
+        // Case: Typing a character to overwrite a selection
+        let val = this.inputElement.value;
+        let valOld = this.oldValueUnmasked;
+        let selectionLenOld = this.oldSelectionLength || 0;
+        let _isAddition = (val.length == valOld.length + 1);
+        return _isAddition;
+    }
+
     isDeletion() {
         // Case: Delete and backspace behave identically on a selection
         let val = this.unmaskedUIValue;
+        if(this.aspnetMasking) {
+            val = this.inputElement.value;
+        }
         let valOld = this.oldValueUnmasked;
         let selectionLenOld = this.oldSelectionLength || 0;
         let _isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld);
@@ -169,6 +183,18 @@ export class MaskedInput {
         let caretPosDelta = caretPos - caretPosOld;
         let selectionLenOld = this.oldSelectionLength || 0;
         let wasSelected = selectionLenOld > 0;
+        if(this.isSingleAddition() && this.editMode === "overtype") {
+            // if user is holding a key down, we need to fix things up, because onKeyUp won't
+            valUnmasked = this.inputElement.value;
+            valUnmasked = valUnmasked.substr(0, caretPos) + valUnmasked.substr(caretPos+1);
+            valUnmasked = this.masker.unmaskValue(valUnmasked);
+            let caretPosMin = this.minCaretPos;
+            let caretPosMax = this.masker.maxCaretPos(valUnmasked);
+            // Scoot the caret forward until it's in a non-mask position and within min/max position limits
+            while (!this.isValidCaretPosition(caretPos) && caretPos > caretPosMin && caretPos < caretPosMax) {
+                caretPos += 1;
+            }
+        }
 
         // Necessary due to "input" event not providing a key code
         let isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
@@ -200,7 +226,9 @@ export class MaskedInput {
             }
             var charIndex = this.masker.maskCaretMap.indexOf(caretPos);
             // Strip out non-mask character that user would have deleted if mask hadn't been in the way.
-            valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
+            if(charIndex != 0) {
+                valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
+            }
         }
 
         // Update values
@@ -417,7 +445,7 @@ export class MaskedInput {
         this.masker = getMasker(this.mask, this.bindMasking);
     }
 
-    valueChanged() {
+    valueChanged(newv, oldv) {
         let valUnmasked = this.unmaskedModelValue;
         let caretPos = this.getCaretPosition() || 0;
         let caretPosOld = this.oldCaretPosition || 0;
@@ -434,6 +462,13 @@ export class MaskedInput {
         this.oldSelectionLength = this.getSelectionLength();
 
         // Update values
+        if(this.editMode === "overtype") {
+            if(this.masker.stripPlaceholders(newv).length < this.masker.stripPlaceholders(oldv).length) {
+                caretBumpBack = true;
+            }else{
+                caretBumpBack = false;
+            }
+        }
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.value = valUnmasked;
     }

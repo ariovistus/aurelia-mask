@@ -14,25 +14,6 @@ System.config({
     "tsconfig.json": "src/tsconfig.json"
   },
 
-  packages: {
-    "/src": {
-      "defaultExtension": "ts",
-      "meta": {
-        "*.ts": {
-          "loader": "ts"
-        }
-      }
-    },
-    "/tests": {
-      "defaultExtension": "ts",
-      "meta": {
-        "*.ts": {
-          "loader": "ts"
-        }
-      }
-    }
-  },
-
   map: {
     "ansi-styles": "npm:ansi-styles@2.2.1",
     "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.0.0-beta.1.2.0",
