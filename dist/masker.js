@@ -293,6 +293,13 @@ System.register([], function(exports_1) {
                     var defaultPlaceholderChar = this.placeholder;
                     return (defaultPlaceholderChar.toLowerCase() === 'space') ? ' ' : defaultPlaceholderChar[0];
                 };
+                Masker.prototype.isValidAt = function (chr, caretPos) {
+                    var ix = this.maskCaretMap.indexOf(caretPos);
+                    if (ix == -1 || ix >= this.maskPatterns.length)
+                        return false;
+                    var pattern = this.maskPatterns[ix];
+                    return pattern.test(chr);
+                };
                 return Masker;
             })();
             exports_1("Masker", Masker);

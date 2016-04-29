@@ -348,6 +348,13 @@ export class Masker {
         var defaultPlaceholderChar = this.placeholder;
         return (defaultPlaceholderChar.toLowerCase() === 'space') ? ' ' : defaultPlaceholderChar[0];
     }
+
+    isValidAt(chr: string, caretPos: number): boolean {
+        let ix = this.maskCaretMap.indexOf(caretPos);
+        if(ix == -1 || ix >= this.maskPatterns.length) return false;
+        let pattern = this.maskPatterns[ix];
+        return pattern.test(chr);
+    }
 }
 
 // from http://stackoverflow.com/a/9436948

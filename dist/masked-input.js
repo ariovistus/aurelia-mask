@@ -156,8 +156,15 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     if (this.isSingleAddition() && this.editMode === "overtype") {
                         valUnmasked = this.inputElement.value;
                         if (this.isValidCaretPosition(caretPosOld)) {
-                            valUnmasked = valUnmasked.substr(0, caretPos) + valUnmasked.substr(caretPos + 1);
-                            valUnmasked = this.masker.unmaskValue(valUnmasked);
+                            var newChar = valUnmasked.charAt(caretPosOld);
+                            if (this.masker.isValidAt(newChar, caretPosOld)) {
+                                valUnmasked = valUnmasked.substr(0, caretPos) + valUnmasked.substr(caretPos + 1);
+                                valUnmasked = this.masker.unmaskValue(valUnmasked);
+                            }
+                            else {
+                                valUnmasked = valUnmasked.substr(0, caretPosOld) + valUnmasked.substr(caretPosOld + 1);
+                                valUnmasked = this.masker.unmaskValue(valUnmasked);
+                            }
                             caretPos = this.masker.getNextCaretPos(caretPosOld);
                         }
                         else {

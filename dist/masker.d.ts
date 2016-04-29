@@ -30,4 +30,5 @@ export declare class Masker {
     processRawMask(): void;
     getMaskComponents(): void;
     getPlaceholderChar(i: any): string;
+    isValidAt(chr: string, caretPos: number): boolean;
 }

@@ -541,7 +541,7 @@ describe("masked input", () => {
             input6.sendKeys(protractor.Key.ARROW_LEFT);
             input6.sendKeys(protractor.Key.ARROW_LEFT);
             expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
-            expect(getCursor(input6)).toBe(15);
+            expect(getCursor(input6)).toBe(15); 
 
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
@@ -580,6 +580,89 @@ describe("masked input", () => {
             input6.sendKeys("7");
             expect(input6.getAttribute("value")).toBe("(123) (457) 1____");
             expect(getCursor(input6)).toBe(12);
+        });
+
+        it("should not accept alpha chars (unless it should)", () => {
+            let input6 = element(by.id("input6"));
+            let result = null;
+            input6.click(); // be focused!
+            input6.sendKeys(protractor.Key.ARROW_UP);
+            expect(input6.getAttribute("value")).toBe("(___) (___) _____");
+            expect(getCursor(input6)).toBe(1);
+
+            input6.sendKeys("12345678901");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(17);
+
+            input6.sendKeys("2");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(17);
+
+            input6.sendKeys("*");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(17);
+
+            input6.sendKeys("\n");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(17);
+
+            input6.sendKeys(protractor.Key.ARROW_LEFT);
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(16);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(17);
+
+            input6.sendKeys(protractor.Key.ARROW_UP);
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(1);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(2);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(3);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(7);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(8);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(9);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 78901");
+            expect(getCursor(input6)).toBe(12);
+
+            // this position is a wildcard mask - x should be allowed
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) x8901");
+            expect(getCursor(input6)).toBe(13);
+            
+            // this position is a wildcard mask - x should be allowed
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) xx901");
+            expect(getCursor(input6)).toBe(14);
+            
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) xx901");
+            expect(getCursor(input6)).toBe(15);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) xx901");
+            expect(getCursor(input6)).toBe(16);
+
+            input6.sendKeys("x");
+            expect(input6.getAttribute("value")).toBe("(123) (456) xx901");
+            expect(getCursor(input6)).toBe(17);
         });
     });
 
