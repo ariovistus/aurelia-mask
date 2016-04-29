@@ -30,6 +30,9 @@ function isNumeric(n) {
 }
 
 function deleteChars(s: string, ch: string): string {
+    if(s == null) {
+        s = "";
+    }
     return s.split(ch).join("");
 }
 
@@ -252,6 +255,28 @@ export class Masker {
 
     stripPlaceholders(masked) {
         return deleteChars(masked, this.placeholder);
+    }
+
+    getNextCaretPos(caretPos: number): number {
+        if(this.maskCaretMap.length == 0) {
+            return this.maskFormat.length;
+        }
+        let ix = 0;
+        while(ix < this.maskCaretMap.length-1 && this.maskCaretMap[ix] <= caretPos) {
+            ix++;
+        }
+        return this.maskCaretMap[ix];
+    }
+
+    getPreviousCaretPos(caretPos: number): number {
+        if(this.maskCaretMap.length == 0) {
+            return 0;
+        }
+        let ix = this.maskCaretMap.length-1;
+        while(ix > 0 && this.maskCaretMap[ix] >= caretPos) {
+            ix--;
+        }
+        return this.maskCaretMap[ix];
     }
 
     processRawMask() {

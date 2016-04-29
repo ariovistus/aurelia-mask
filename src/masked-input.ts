@@ -161,20 +161,15 @@ export class MaskedInput {
 
     isDeletion() {
         // Case: Delete and backspace behave identically on a selection
-        let val = this.unmaskedUIValue;
-        if(this.aspnetMasking) {
-            val = this.inputElement.value;
-        }
-        let valOld = this.oldValueUnmasked;
+        let val = this.inputElement.value;
+        let valOld = this.oldValue;
         let selectionLenOld = this.oldSelectionLength || 0;
         let _isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld);
         return _isDeletion;
     }
 
     onInput(e: any) {
-        /*jshint validthis: true */
         e = e || {};
-        // Allows more efficient minification
 
         let valUnmasked = this.unmaskedUIValue;
         let valUnmaskedOld = this.oldValueUnmasked;
@@ -186,13 +181,16 @@ export class MaskedInput {
         if(this.isSingleAddition() && this.editMode === "overtype") {
             // if user is holding a key down, we need to fix things up, because onKeyUp won't
             valUnmasked = this.inputElement.value;
-            valUnmasked = valUnmasked.substr(0, caretPos) + valUnmasked.substr(caretPos+1);
-            valUnmasked = this.masker.unmaskValue(valUnmasked);
-            let caretPosMin = this.minCaretPos;
-            let caretPosMax = this.masker.maxCaretPos(valUnmasked);
-            // Scoot the caret forward until it's in a non-mask position and within min/max position limits
-            while (!this.isValidCaretPosition(caretPos) && caretPos > caretPosMin && caretPos < caretPosMax) {
-                caretPos += 1;
+            if(this.isValidCaretPosition(caretPosOld)) {
+                valUnmasked = valUnmasked.substr(0, caretPos) + valUnmasked.substr(caretPos+1);
+                valUnmasked = this.masker.unmaskValue(valUnmasked);
+                caretPos = this.masker.getNextCaretPos(caretPosOld);
+            }else {
+                let newChar = this.inputElement.value.charAt(caretPosOld) || "";
+                caretPos = this.masker.getNextCaretPos(caretPos);
+                valUnmasked = this.oldValue.substr(0, caretPos) + newChar + this.oldValue.substr(caretPos+1);
+                valUnmasked = this.masker.unmaskValue(valUnmasked);
+                caretPos = this.masker.getNextCaretPos(caretPos);
             }
         }
 
@@ -201,9 +199,20 @@ export class MaskedInput {
         let isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
         // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
         // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
-        // non-mask character. Also applied to click since users are (arguably) more likely to backspace
-        // a character when clicking within a filled input.
+        // non-mask character. Also applied to click since users are (arguably) more likely to backspace // a character when clicking within a filled input.
         let caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
+
+        if(wasSelected && this.isAddition()) {
+            let startCaretPos = Math.min(caretPos, caretPosOld);
+            if(caretPos < caretPosOld) {
+                startCaretPos--; //??
+            }
+            if(!this.isValidCaretPosition(startCaretPos)) {
+                startCaretPos = this.masker.getNextCaretPos(startCaretPos);
+            }
+            let newDelta = this.inputElement.value.length -  (this.oldValue.length - Math.abs(caretPosDelta)-1);
+            caretPos = startCaretPos + newDelta;
+        }
 
         this.oldSelectionLength = this.getSelectionLength();
 
@@ -216,8 +225,13 @@ export class MaskedInput {
         // Value Handling
         // ==============
 
+        if(this.isDeletion() && !wasSelected && !this.isValidCaretPosition(caretPos)) {
+            // need to delete whatever was before the punctuation
+            caretPos = this.masker.getPreviousCaretPos(caretPos);
+            valUnmasked = this.masker.unmaskValue(this.oldValue.substring(0, caretPos) + this.oldValue.substring(caretPos+1));
+        }
         // User attempted to delete but raw value was unaffected--correct this grievous offense
-        if (this.isDeletion() && !wasSelected && valUnmasked === valUnmaskedOld) {
+        else if (this.isDeletion() && !wasSelected && valUnmasked === valUnmaskedOld) {
             while (isKeyBackspace && caretPos > this.minCaretPos && !this.isValidCaretPosition(caretPos)) {
                 caretPos--;
             }
@@ -227,7 +241,9 @@ export class MaskedInput {
             var charIndex = this.masker.maskCaretMap.indexOf(caretPos);
             // Strip out non-mask character that user would have deleted if mask hadn't been in the way.
             if(charIndex != 0) {
-                valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
+                if(!this.aspnetMasking) {
+                    valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
+                }
             }
         }
 
@@ -463,11 +479,9 @@ export class MaskedInput {
 
         // Update values
         if(this.editMode === "overtype") {
-            if(this.masker.stripPlaceholders(newv).length < this.masker.stripPlaceholders(oldv).length) {
-                caretBumpBack = true;
-            }else{
-                caretBumpBack = false;
-            }
+            let strippedOld = this.masker.stripPlaceholders(oldv);
+            let strippedNew = this.masker.stripPlaceholders(newv);
+            caretBumpBack = caretBumpBack && strippedNew.length < strippedOld.length;
         }
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this.value = valUnmasked;

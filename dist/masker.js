@@ -24,6 +24,9 @@ System.register([], function(exports_1) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
     function deleteChars(s, ch) {
+        if (s == null) {
+            s = "";
+        }
         return s.split(ch).join("");
     }
     function isString(myVar) {
@@ -225,6 +228,26 @@ System.register([], function(exports_1) {
                 };
                 Masker.prototype.stripPlaceholders = function (masked) {
                     return deleteChars(masked, this.placeholder);
+                };
+                Masker.prototype.getNextCaretPos = function (caretPos) {
+                    if (this.maskCaretMap.length == 0) {
+                        return this.maskFormat.length;
+                    }
+                    var ix = 0;
+                    while (ix < this.maskCaretMap.length - 1 && this.maskCaretMap[ix] <= caretPos) {
+                        ix++;
+                    }
+                    return this.maskCaretMap[ix];
+                };
+                Masker.prototype.getPreviousCaretPos = function (caretPos) {
+                    if (this.maskCaretMap.length == 0) {
+                        return 0;
+                    }
+                    var ix = this.maskCaretMap.length - 1;
+                    while (ix > 0 && this.maskCaretMap[ix] >= caretPos) {
+                        ix--;
+                    }
+                    return this.maskCaretMap[ix];
                 };
                 Masker.prototype.processRawMask = function () {
                     var _this = this;

@@ -213,6 +213,29 @@ describe("Masker", () => {
         expect(masker.unmaskValue("/___/_8/____/")).toBe("/___/_8/____/");
         expect(masker.unmaskValue("/___/__/__7_/")).toBe("/___/__/__7_/");
         expect(masker.unmaskValue("/___/__/6__7_/")).toBe("/___/__/6__7/");
+
+        masker = getMasker("(999) (999) 99999", false, null, true);
+
+        expect(masker.maskValue("(___) (__) _____")).toBe("(___) (___) _____");
+    });
+
+    it("should strip off placeholder chars", () => {
+        let masker = getMasker("/999/99/9999/", false, null, true);
+
+        let masking = masker.maskValue("875");
+        let data = [
+            {masked: undefined, expected: ""},
+            {masked: null, expected: ""},
+            {masked: "", expected: ""},
+            {masked: masker.maskValue("/87/5"), expected: "/87/5//"},
+            {masked: masker.maskValue("/111/11/6117/"), expected: "/111/11/6117/"},
+        ];
+
+        for (var item of data) {
+            let stripped = masker.stripPlaceholders(item.masked);
+            expect(stripped).toBe(item.expected);
+        }
+
     });
 });
 

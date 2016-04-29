@@ -98,7 +98,6 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         this.setCaretPosition(caretPosOld);
                         return;
                     }
-                    console.info("update ui from onClick");
                     this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
                 };
                 Object.defineProperty(MaskedInput.prototype, "unmaskedUIValue", {
@@ -139,11 +138,8 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     return _isAddition;
                 };
                 MaskedInput.prototype.isDeletion = function () {
-                    var val = this.unmaskedUIValue;
-                    if (this.aspnetMasking) {
-                        val = this.inputElement.value;
-                    }
-                    var valOld = this.oldValueUnmasked;
+                    var val = this.inputElement.value;
+                    var valOld = this.oldValue;
                     var selectionLenOld = this.oldSelectionLength || 0;
                     var _isDeletion = (val.length < valOld.length) || (selectionLenOld && val.length === valOld.length - selectionLenOld);
                     return _isDeletion;
@@ -158,32 +154,45 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     var selectionLenOld = this.oldSelectionLength || 0;
                     var wasSelected = selectionLenOld > 0;
                     if (this.isSingleAddition() && this.editMode === "overtype") {
-                        console.info("correcting single char overtype at caret pos ", caretPos);
                         valUnmasked = this.inputElement.value;
-                        console.info(" was: ", valUnmasked);
-                        valUnmasked = valUnmasked.substr(0, caretPos) + valUnmasked.substr(caretPos + 1);
-                        valUnmasked = this.masker.unmaskValue(valUnmasked);
-                        console.info(" is: ", valUnmasked);
-                        var caretPosMin = this.minCaretPos;
-                        var caretPosMax = this.masker.maxCaretPos(valUnmasked);
-                        console.info(" caretmap: ", this.masker.maskCaretMap);
-                        while (!this.isValidCaretPosition(caretPos) && caretPos > caretPosMin && caretPos < caretPosMax) {
-                            caretPos += 1;
+                        if (this.isValidCaretPosition(caretPosOld)) {
+                            valUnmasked = valUnmasked.substr(0, caretPos) + valUnmasked.substr(caretPos + 1);
+                            valUnmasked = this.masker.unmaskValue(valUnmasked);
+                            caretPos = this.masker.getNextCaretPos(caretPosOld);
                         }
-                        console.info("caret pos should be ", caretPos);
+                        else {
+                            var newChar = this.inputElement.value.charAt(caretPosOld) || "";
+                            caretPos = this.masker.getNextCaretPos(caretPos);
+                            valUnmasked = this.oldValue.substr(0, caretPos) + newChar + this.oldValue.substr(caretPos + 1);
+                            valUnmasked = this.masker.unmaskValue(valUnmasked);
+                            caretPos = this.masker.getNextCaretPos(caretPos);
+                        }
                     }
                     var isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
                     var isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
-                    var isAddition = this.isAddition();
                     var caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
+                    if (wasSelected && this.isAddition()) {
+                        var startCaretPos = Math.min(caretPos, caretPosOld);
+                        if (caretPos < caretPosOld) {
+                            startCaretPos--;
+                        }
+                        if (!this.isValidCaretPosition(startCaretPos)) {
+                            startCaretPos = this.masker.getNextCaretPos(startCaretPos);
+                        }
+                        var newDelta = this.inputElement.value.length - (this.oldValue.length - Math.abs(caretPosDelta) - 1);
+                        caretPos = startCaretPos + newDelta;
+                    }
                     this.oldSelectionLength = this.getSelectionLength();
                     if (isKeyBackspace && this.preventBackspace) {
                         this.inputElement.value = this.oldValue;
                         this.setCaretPosition(caretPosOld);
                         return;
                     }
-                    console.info(" onInput caretPos: ", caretPos, " isKeyBackspace: ", isKeyBackspace, "isDeletion: ", this.isDeletion(), "caretPosDelta: ", caretPosDelta);
-                    if (this.isDeletion() && !wasSelected && valUnmasked === valUnmaskedOld) {
+                    if (this.isDeletion() && !wasSelected && !this.isValidCaretPosition(caretPos)) {
+                        caretPos = this.masker.getPreviousCaretPos(caretPos);
+                        valUnmasked = this.masker.unmaskValue(this.oldValue.substring(0, caretPos) + this.oldValue.substring(caretPos + 1));
+                    }
+                    else if (this.isDeletion() && !wasSelected && valUnmasked === valUnmaskedOld) {
                         while (isKeyBackspace && caretPos > this.minCaretPos && !this.isValidCaretPosition(caretPos)) {
                             caretPos--;
                         }
@@ -192,14 +201,13 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         }
                         var charIndex = this.masker.maskCaretMap.indexOf(caretPos);
                         if (charIndex != 0) {
-                            valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
+                            if (!this.aspnetMasking) {
+                                valUnmasked = valUnmasked.substring(0, charIndex) + valUnmasked.substring(charIndex + 1);
+                            }
                         }
-                        console.info(" onInput did something to caretPos: ", caretPos);
                     }
-                    console.info("update ui from onInput");
                     this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
                     this.value = valUnmasked;
-                    console.info("resultant caret pos: ", this.getCaretPosition());
                 };
                 MaskedInput.prototype.onFocus = function (e) {
                     e = e || {};
@@ -218,7 +226,6 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         this.setCaretPosition(caretPosOld);
                         return;
                     }
-                    console.info("update ui from onFocus");
                     this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
                 };
                 MaskedInput.prototype.onKeyUp = function (e) {
@@ -229,7 +236,6 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     }
                     var valUnmasked = this.unmaskedUIValue;
                     var caretPos = this.getCaretPosition() || 0;
-                    console.info("onKeyUp caret pos: ", caretPos);
                     var caretPosOld = this.oldCaretPosition || 0;
                     var caretPosDelta = caretPos - caretPosOld;
                     var selectionLenOld = this.oldSelectionLength || 0;
@@ -248,12 +254,10 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         this.setCaretPosition(caretPosOld);
                         return;
                     }
-                    console.info("update ui from onKeyUp");
                     this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
                     this.value = valUnmasked;
                 };
                 MaskedInput.prototype.updateUIValue = function (valUnmasked, caretBumpBack, caretPos, caretPosOld) {
-                    console.info("update ui value val: ", valUnmasked, "caretPos: ", caretPos, "caret bump back: ", caretBumpBack);
                     var isAddition = this.isAddition();
                     var valMasked = this.masker.maskValue(valUnmasked);
                     var caretPosMin = this.minCaretPos;
@@ -279,7 +283,6 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     this.oldCaretPosition = caretPos;
                     this.caretPos = caretPos;
                     this.setCaretPosition(this.caretPos);
-                    console.info("out update ui");
                 };
                 MaskedInput.prototype.getSelectionLength = function () {
                     if (!this.inputElement)
@@ -327,7 +330,6 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     return this.masker.maskCaretMap.indexOf(pos) > -1;
                 };
                 MaskedInput.prototype.setCaretPosition = function (pos) {
-                    console.info("   set caret pos to ", pos);
                     if (!this.inputElement)
                         return 0;
                     if (this.isHidden()) {
@@ -366,17 +368,10 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     var isSelected = this.getSelectionLength() > 0;
                     var caretBumpBack = caretPos > this.minCaretPos;
                     this.oldSelectionLength = this.getSelectionLength();
-                    console.info("update ui from valueChanged");
-                    console.info(" value: ", newv, oldv);
-                    console.info(" valueUnmasked: ", valUnmasked);
-                    console.info(" oldValueUnmasked: ", this.oldValueUnmasked);
                     if (this.editMode === "overtype") {
-                        if (this.masker.stripPlaceholders(newv).length < this.masker.stripPlaceholders(oldv).length) {
-                            caretBumpBack = true;
-                        }
-                        else {
-                            caretBumpBack = false;
-                        }
+                        var strippedOld = this.masker.stripPlaceholders(oldv);
+                        var strippedNew = this.masker.stripPlaceholders(newv);
+                        caretBumpBack = caretBumpBack && strippedNew.length < strippedOld.length;
                     }
                     this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
                     this.value = valUnmasked;

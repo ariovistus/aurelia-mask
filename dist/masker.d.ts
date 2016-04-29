@@ -19,6 +19,8 @@ export declare class Masker {
     _maskValue(unmaskedValue: string, keepMasking: boolean): string;
     _maskValue2(unmaskedValue: string): string;
     stripPlaceholders(masked: any): string;
+    getNextCaretPos(caretPos: number): number;
+    getPreviousCaretPos(caretPos: number): number;
     processRawMask(): void;
     getMaskComponents(): void;
     getPlaceholderChar(i: any): string;
