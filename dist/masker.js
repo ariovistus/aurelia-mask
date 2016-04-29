@@ -1,18 +1,12 @@
 System.register([], function(exports_1) {
-    var _maskers, maskDefinitions, Masker;
-    function getMasker(format, bindMasking, _placeholder, aspnetMasking) {
-        if (_placeholder === void 0) { _placeholder = null; }
-        if (aspnetMasking === void 0) { aspnetMasking = false; }
+    var MaskOptions, _maskers, maskDefinitions, Masker;
+    function getMasker(options) {
         var maskers = _maskers;
-        var placeholder = _placeholder || "_";
-        bindMasking = !!bindMasking;
-        aspnetMasking = !!aspnetMasking;
-        var key = {
-            maskFormat: format,
-            bindMasking: bindMasking,
-            placeholder: placeholder,
-            aspnetMasking: aspnetMasking
-        };
+        var key = new MaskOptions();
+        key.maskFormat = options.maskFormat;
+        key.placeholder = options.placeholder || "_";
+        key.bindMasking = !!options.bindMasking;
+        key.aspnetMasking = !!options.aspnetMasking;
         var strkey = JSON.stringify(key);
         if (!maskers[strkey]) {
             maskers[strkey] = new Masker(key);
@@ -35,6 +29,12 @@ System.register([], function(exports_1) {
     return {
         setters:[],
         execute: function() {
+            MaskOptions = (function () {
+                function MaskOptions() {
+                }
+                return MaskOptions;
+            })();
+            exports_1("MaskOptions", MaskOptions);
             _maskers = new Map();
             maskDefinitions = {
                 '9': /\d/,

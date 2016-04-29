@@ -32,7 +32,7 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     this.focusHandler = function (e) { return _this.onFocus(e); };
                 }
                 MaskedInput.prototype.bind = function () {
-                    this.masker = masker_1.getMasker(this.mask, this.bindMasking, this.placeholder, this.aspnetMasking);
+                    this.maskChanged();
                     this.oldValue = this.masker.maskValue(this.value);
                     this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
                 };
@@ -357,7 +357,12 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     return (this.inputElement.offsetWidth === 0 || this.inputElement.offsetHeight === 0);
                 };
                 MaskedInput.prototype.maskChanged = function () {
-                    this.masker = masker_1.getMasker(this.mask, this.bindMasking);
+                    this.masker = masker_1.getMasker({
+                        maskFormat: this.mask,
+                        bindMasking: this.bindMasking,
+                        placeholder: this.placeholder,
+                        aspnetMasking: this.aspnetMasking
+                    });
                 };
                 MaskedInput.prototype.valueChanged = function (newv, oldv) {
                     var valUnmasked = this.unmaskedModelValue;

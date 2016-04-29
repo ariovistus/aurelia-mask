@@ -45,11 +45,13 @@ notes
 the default placeholder char is '\_'. You can override it.
 
 ```html
-<input masked="value.bind: myvalue; mask: 99/99; placeholder: *" />
+<input masked="value.bind: myvalue; mask: (999) 999-9999; placeholder: *" />
 
 ```
 
-will display \*\*/\*\* given an empty value.
+| mask            | ui value       | model value |
+| ----            | --------       | ----------- |
+| (999) 999-9999  | (\*\*\*) \*\*\*-\*\*\*\* | ''          |
 
 special case for space:
 
@@ -58,7 +60,9 @@ special case for space:
 
 ```
 
-will display '  /  ' given an empty value.
+| mask            | ui value       | model value |
+| ----            | --------       | ----------- |
+| (999) 999-9999  | '(   )    -    ' | ''          |
 
 ### bind-masking
 
@@ -80,6 +84,37 @@ you can override this:
 | ----            | --------       | -----------     |
 | (999) 999-9999  | (800) 888-8888 | (800) 888-8888  |
 
+### aspnet masking
 
+don't know what to call this, but sometimes you want a more relaxed mode where you can enter characters
+at any position, not just the start
+
+```html
+<input masked="value.bind: myvalue; mask: (999) 999-9999; aspnet-masking: true;" />
+
+```
+
+| mask            | ui value       | model value     |
+| ----            | --------       | -----------     |
+| /999/999/9999/  | /\_\_0/\_8\_/8888/ | /\_\_0/\_8\_/8888/  |
+
+The masker object exposes a function to strip off the placeholder characters:
+
+```javascript
+var masker = getMasker({maskFormat: "/999/999/9999/", aspnetMasking: true})
+var result = masker.stripPlaceholders("/__0/_8_/8888/");
+expect(result).toBe("/0/8/8888/");
+```
+not that that's hard to do yourself. have yet to figure out how to incorporate it in the binding.
+
+### edit mode
+
+by default it is insert. You can also specify overtype mode. 
+
+```html
+<input masked="value.bind: myvalue; mask: (999) 999-9999; edit-mode: overtype" />
+```
+
+Currently only works with aspnet mode.
 
 [ui-mask]: https://github.com/angular-ui/ui-mask

@@ -4,8 +4,8 @@ import {Masker, getMasker} from "src/masker";
 
 describe("getMasker", () => {
     it("should cache masker objects", () => {
-        var masker1 = getMasker("999", false);
-        var masker2 = getMasker("999", false);
+        var masker1 = getMasker({maskFormat: "999", bindMasking: false});
+        var masker2 = getMasker({maskFormat: "999", bindMasking: false});
 
         expect(masker1).toBe(masker2);
     });
@@ -53,14 +53,14 @@ describe("Masker", () => {
 
     it("should mask values", () => {
         for(var tst of mask_data) {
-            var masker = getMasker(tst.fmt, false);
+            var masker = getMasker({maskFormat: tst.fmt, bindMasking: false});
             expect(masker.maskValue(tst.input)).toBe(tst.result);
         }
     });
 
     it("should unmask values", () => {
         for(var tst of unmask_data) {
-            var masker = getMasker(tst.fmt, false);
+            var masker = getMasker({maskFormat: tst.fmt, bindMasking: false});
             expect(masker.unmaskValue(tst.input)).toBe(tst.result);
         }
     });
@@ -83,14 +83,14 @@ describe("Masker", () => {
 
     it("should mask values with masking", () => {
         for(var tst of mask_data) {
-            var masker = getMasker(tst.fmt, true);
+            var masker = getMasker({maskFormat: tst.fmt, bindMasking: true});
             expect(masker.maskValue(tst.input)).toBe(tst.result);
         }
     });
 
     it("should unmask values with masking", () => {
         for(var tst of unmask_sorta_data) {
-            var masker = getMasker(tst.fmt, true);
+            var masker = getMasker({maskFormat: tst.fmt, bindMasking: true});
             expect(masker.unmaskValue(tst.input)).toBe(tst.result);
         }
     });
@@ -110,7 +110,7 @@ describe("Masker", () => {
             {value: "3334445555",   result: "(333) 444-5555*", fmt: phonefmt},
         ];
         for(var tst of data) {
-            var masker = getMasker(tst.fmt, false);
+            var masker = getMasker({maskFormat: tst.fmt, bindMasking: false});
             let caretPos = tst.result.indexOf('*');
             expect(masker.maxCaretPos(tst.value)).toBe(caretPos)
         }
@@ -131,19 +131,19 @@ describe("Masker", () => {
             {value: "(333) 444-5555",   result: "(333) 444-5555*", fmt: phonefmt},
         ];
         for(var tst of data) {
-            var masker = getMasker(tst.fmt, true);
+            var masker = getMasker({maskFormat: tst.fmt, bindMasking: true});
             let caretPos = tst.result.indexOf('*');
             expect(masker.maxCaretPos(tst.value)).toBe(caretPos)
         }
     });
     
     it("should work with numbers", () => {
-        var masker = getMasker("99", false);
+        var masker = getMasker({maskFormat: "99", bindMasking: false});
         expect(masker.maskValue(12)).toBe("12");
     });
 
     it("should get correct max caret position with numbers", () => {
-        var masker = getMasker("99", false);
+        var masker = getMasker({maskFormat: "99", bindMasking: false});
         expect(masker.maxCaretPos("12")).toBe(2);
         expect(masker.maxCaretPos(12)).toBe(2);
         expect(masker.maxCaretPos(9)).toBe(1);
@@ -155,7 +155,7 @@ describe("Masker", () => {
         ];
 
         for(var tst of data) {
-            var masker = getMasker(tst.mask, true);
+            var masker = getMasker({maskFormat: tst.mask, bindMasking: true, placeholder: null, aspnetMasking: false});
             expect(masker.maskComponents).toEqual(["(", ") ", "-", ""]);
         }
     });
@@ -171,13 +171,13 @@ describe("Masker", () => {
         ];
 
         for(var tst of data) {
-            var masker = getMasker(tst.mask, false, tst.placeholder);
+            var masker = getMasker({maskFormat: tst.mask, bindMasking: false, placeholder: tst.placeholder});
             expect(masker.maskValue(tst.input)).toBe(tst.result);
         }
     });
 
     it("should work with aspnet binding mode", () => {
-        let masker = getMasker("/999/99/9999/", false, null, true);
+        let masker = getMasker({maskFormat: "/999/99/9999/", bindMasking: false, placeholder: null, aspnetMasking: true});
         expect(masker.maskCaretMap).toEqual([1,2,3,5,6,8,9,10,11, 12]);
 
         expect(masker.maskValue("1")).toBe("/1__/__/____/");
@@ -214,13 +214,13 @@ describe("Masker", () => {
         expect(masker.unmaskValue("/___/__/__7_/")).toBe("/___/__/__7_/");
         expect(masker.unmaskValue("/___/__/6__7_/")).toBe("/___/__/6__7/");
 
-        masker = getMasker("(999) (999) 99999", false, null, true);
+        masker = getMasker({maskFormat: "(999) (999) 99999", bindMasking: false, placeholder: null, aspnetMasking: true});
 
         expect(masker.maskValue("(___) (__) _____")).toBe("(___) (___) _____");
     });
 
     it("should strip off placeholder chars", () => {
-        let masker = getMasker("/999/99/9999/", false, null, true);
+        let masker = getMasker({maskFormat: "/999/99/9999/", bindMasking: false, placeholder: null, aspnetMasking: true});
 
         let masking = masker.maskValue("875");
         let data = [

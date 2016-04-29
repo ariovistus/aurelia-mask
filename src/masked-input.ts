@@ -45,7 +45,7 @@ export class MaskedInput {
     }
 
     bind() {
-        this.masker = getMasker(this.mask, this.bindMasking, this.placeholder, this.aspnetMasking);
+        this.maskChanged();
         this.oldValue = this.masker.maskValue(this.value);
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     }
@@ -458,7 +458,12 @@ export class MaskedInput {
     }
 
     maskChanged() {
-        this.masker = getMasker(this.mask, this.bindMasking);
+        this.masker = getMasker({
+            maskFormat: this.mask, 
+            bindMasking: this.bindMasking, 
+            placeholder: this.placeholder, 
+            aspnetMasking: this.aspnetMasking
+        });
     }
 
     valueChanged(newv, oldv) {

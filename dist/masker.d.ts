@@ -1,4 +1,10 @@
-export declare function getMasker(format: string, bindMasking: boolean, _placeholder?: string, aspnetMasking?: boolean): Masker;
+export declare function getMasker(options: any): Masker;
+export declare class MaskOptions {
+    maskFormat: string;
+    bindMasking: boolean;
+    placeholder: string;
+    aspnetMasking: boolean;
+}
 export declare class Masker {
     maskFormat: string;
     maskCaretMap: Array<number>;
@@ -10,7 +16,7 @@ export declare class Masker {
     bindMasking: boolean;
     aspnetMasking: boolean;
     placeholder: string;
-    constructor(options: any);
+    constructor(options: MaskOptions);
     unmaskValue(value: any): string;
     maskValue(unmaskedValue: any): string;
     maxCaretPos(value: any): number;

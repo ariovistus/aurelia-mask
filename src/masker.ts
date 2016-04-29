@@ -1,20 +1,23 @@
-﻿export function getMasker(format: string, bindMasking: boolean, _placeholder: string = null, aspnetMasking: boolean = false): Masker {
+﻿export function getMasker(options: any): Masker {
     let maskers : Map<any, Masker> = _maskers;
-    let placeholder = _placeholder || "_";
-    bindMasking = !!bindMasking;
-    aspnetMasking = !!aspnetMasking;
+    let key = new MaskOptions();
+    key.maskFormat = options.maskFormat;
+    key.placeholder = options.placeholder || "_";
+    key.bindMasking = !!options.bindMasking;
+    key.aspnetMasking = !!options.aspnetMasking;
 
-    let key = {
-        maskFormat: format,
-        bindMasking: bindMasking,
-        placeholder: placeholder,
-        aspnetMasking: aspnetMasking
-    }
     let strkey = JSON.stringify(key);
     if (!maskers[strkey]) {
         maskers[strkey] = new Masker(key);
     }
     return maskers[strkey];
+}
+
+export class MaskOptions {
+    maskFormat: string;
+    bindMasking: boolean;
+    placeholder: string;
+    aspnetMasking: boolean;
 }
 
 
@@ -24,6 +27,7 @@ var maskDefinitions = {
     'A': /[a-zA-Z]/,
     '*': /[a-zA-Z0-9]/
 };
+
 // from http://stackoverflow.com/a/9716488/23648
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -48,7 +52,7 @@ export class Masker {
     aspnetMasking: boolean;
     placeholder: string;
 
-    constructor(options) {
+    constructor(options: MaskOptions) {
         this.maskFormat = options.maskFormat;
         this.bindMasking = options.bindMasking;
         this.aspnetMasking = options.aspnetMasking;
