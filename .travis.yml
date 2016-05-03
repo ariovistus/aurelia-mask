@@ -3,8 +3,8 @@ node_js:
     - "4"
 addons:
     sauce_connect:
-        username: "ariovistus"
+        username: "aurelia-mask"
         access_key: 
-            secure: "bOIq8VREWxvpS86D6/61F0MrXXYciQ4XQ9o0B4izum5nEbIJ+9RJtYQ1+oEqmO4IXookXLg7LTdr++DA0YEo6MahN+FGtn4J/xgKbm2c6nfrOfGexv4ns6EwgI+l4HCe8rYd+wAcb3gtyf1Hx2lExSkfQyHSkcNIIf1Jl5M/XgdK0CtKkL7peN1VGJN+U5nuQclLpVteeYf+cpoUBoiakZR1NkB4NEvL7qFDU95Ms4YvqTJWXXKM9pQKreRlgcs4n46+7K7519fAQ+MLrMT9xYhYCYCdWsw3t3fDVBBaQF7FxsQP9hz0uPVdXixx4k198IQ727kHacxf5OBFcBFvw+D5MEU+SJI0XTzJL+JlxdUpYAhIRKowGRUkpafzz80q7LqBxCBmhFQcHukTVAK5APL2Wxum6sUZBQhz40gPlE1GwjCSAiPxhd6q8B4YAPxzhxicJoVgVxupVWDOI7qgGPvRnD5ob5zEA76CWwDyxtf9PDrH/RuwedDQKIw3JKlIjni1k7ekgNIrTVXrIEcRFfdHFP3LeLS67FPvxtVusOBApogqxLsAiCErGfokeqzti42B2QX3MUp6fEdKR21gAJ8Qc/0cw94dcvBuyyVXGQJG0o/NrwrADIZN6z/uUiyPbxqY+DHkblwdYb+avti7aUNhmwRNzdZx+keAAQNAjH4="
+            secure: "daF/wUbscwgMdGpD8Qih/cJtt3Fqau5/kFdpXBI0LUlL9cXAjgaVl2lsJe7bNa67lgRglSJ5yRlkG/Inx/ck6JC6kzMLrO1iijb24x3cP9s1kMxPiia9PyNXcG9BijayF0PGydkJPi2HvTkoBJh4hWTfOmIKo7/X+dgeNDxM1EYd2NnNX6cX29ylJhykj5IM3COVCMH7HJGEC3dQEAbsU5VAzkK07ya709vS0u3rW7KakzE77ROI7qOUZPTVHWnfxPU3gBEAix95jKvNu99us3osawl+vA/d191z/VDnaFVdzy0izNsOW2eOs0luH0ow2HmKAU1OE48H/Ll6nHPBo8HO/q2Yf9evDn8HsehxdEoDm+3SPaTx+twTaLOS7rSSFBOZzQCF0KlBgrrdtxeS0UoRjUdKx5mcZysNj/BcPgjDPvGylvXrBG4eVWDRpLnWl1I9Svib0vwT4QXFrvq3CQSAMaRVf+4tv3dIfBkAM/q0A7nRIXmeczJXgK5RyJGY6j3UxAXxQxKC6T0hT3wvYc4ET8DmadEtNOpTTATe9uneWd2ExcE1rpKXh6L7JgAYmEDKldLuEsxUVpQM766sz2edDp3e1JlT8JyAk6SwUr+Ys9YVzCxfl0be5LCmJ7z0u8cPxOIMgwFM/tGNgog/PUTFKklWPNHZTogn8P1bPqk="
 
 script: bash runtests.sh
