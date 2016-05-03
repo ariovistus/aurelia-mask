@@ -1,6 +1,11 @@
 {
   "name": "aurelia-mask",
-  "version": "0.0.1",
+  "version": "1.0.1",
+  "license": "MIT",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/ariovistus/aurelia-mask.git"
+  },
   "jspm": {
     "directories": {
       "lib": "dist"

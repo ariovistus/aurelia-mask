@@ -5,7 +5,8 @@ export var config = {
   // Capabilities to be passed to the webdriver instance.
   capabilities: {
       'browserName': 'chrome',
-      'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER
+      'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
+      'public': 'public'
   },
 
   //seleniumAddress: 'http://0.0.0.0:4444',
