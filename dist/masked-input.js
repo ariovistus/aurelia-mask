@@ -227,7 +227,7 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     var isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
                     var isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
                     var caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
-                    this.oldSelectionLength = this.getSelectionLength();
+                    this.oldSelectionLength = 0;
                     if (isKeyBackspace && this.preventBackspace) {
                         this.inputElement.value = this.oldValue;
                         this.setCaretPosition(caretPosOld);

@@ -278,7 +278,7 @@ export class MaskedInput {
         // a character when clicking within a filled input.
         let caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
 
-        this.oldSelectionLength = this.getSelectionLength();
+        this.oldSelectionLength = 0;
 
         if (isKeyBackspace && this.preventBackspace) {
             this.inputElement.value = this.oldValue;

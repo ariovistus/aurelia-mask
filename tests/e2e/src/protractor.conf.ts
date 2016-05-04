@@ -5,9 +5,11 @@ export var config = {
   // Capabilities to be passed to the webdriver instance.
   capabilities: {
       'browserName': 'chrome',
+      'build': process.env.TRAVIS_BUILD_NUMBER,
       'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
       'public': 'public'
   },
+  allScriptsTimeout: 20000,
 
   //seleniumAddress: 'http://0.0.0.0:4444',
   specs: ['*.spec.js'],

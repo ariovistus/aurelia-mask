@@ -664,6 +664,15 @@ describe("masked input", () => {
             expect(input6.getAttribute("value")).toBe("(123) (456) xx901");
             expect(getCursor(input6)).toBe(17);
         });
+
+        it("should go to first character on focus when empty", () => {
+            let update5 = element(by.id("update5"));
+            let input6 = element(by.id("input6"));
+            update5.click();
+            update5.sendKeys(protractor.Key.TAB);
+            expect(browser.driver.switchTo().activeElement().getAttribute("id")).toBe("input6");
+            expect(getCursor(input6)).toBe(1);
+        });
     });
 
 /**
