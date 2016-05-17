@@ -23,6 +23,7 @@ export declare class MaskedInput {
     inputHandler: any;
     clickHandler: any;
     focusHandler: any;
+    selectHandler: any;
     isAttached: boolean;
     constructor(element: Element);
     bind(): void;
@@ -30,10 +31,11 @@ export declare class MaskedInput {
     detached(): void;
     maxCaretPos: number;
     minCaretPos: number;
+    onSelect(e: any): void;
     onClick(e: any): void;
     unmaskedUIValue: string;
     unmaskedModelValue: string;
-    isAddition(): boolean;
+    isAddition(doterriblethings?: boolean): boolean;
     isSingleAddition(): boolean;
     isDeletion(): boolean;
     onInput(e: any): void;

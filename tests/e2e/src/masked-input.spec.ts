@@ -1,6 +1,12 @@
 function getCursor(inputElement) {
     return browser.executeScript("return arguments[0].selectionStart;", inputElement.getWebElement());
 }
+function getSelectionStart(inputElement) {
+    return browser.executeScript("return arguments[0].selectionStart;", inputElement.getWebElement());
+}
+function getSelectionEnd(inputElement) {
+    return browser.executeScript("return arguments[0].selectionEnd;", inputElement.getWebElement());
+}
 
 function setCursor(inputElement, index) {
     inputElement.setSelectionRange(index, index);
@@ -48,11 +54,13 @@ describe("masked input", () => {
             expect(input1.getAttribute("value")).toBe("(613) (245) 7____");
             expect(getCursor(input1)).toBe(13);
         });
+        
 
         it("should behave with delete", () => {
             let input1 = element(by.id("input1"));
             let result = null;
             input1.click(); // be focused!
+            input1.sendKeys(protractor.Key.ARROW_RIGHT); // don't be all selected!
             expect(input1.getAttribute("value")).toBe("(___) (___) _____");
             expect(getCursor(input1)).toBe(1);
 
@@ -98,6 +106,7 @@ describe("masked input", () => {
             let input1 = element(by.id("input1"));
             let result = null;
             input1.click(); // be focused!
+            input1.sendKeys(protractor.Key.ARROW_RIGHT); // don't be all selected!
             expect(input1.getAttribute("value")).toBe("(___) (___) _____");
             expect(getCursor(input1)).toBe(1);
 
@@ -162,6 +171,7 @@ describe("masked input", () => {
             let input1 = element(by.id("input1"));
             let result = null;
             input1.click(); // be focused!
+            input1.sendKeys(protractor.Key.ARROW_RIGHT); // don't be all selected!
             expect(input1.getAttribute("value")).toBe("(___) (___) _____");
             expect(getCursor(input1)).toBe(1);
 
@@ -244,6 +254,7 @@ describe("masked input", () => {
             let input1 = element(by.id("input1"));
             let result = null;
             input1.click(); // be focused!
+            input1.sendKeys(protractor.Key.ARROW_RIGHT); // don't be all selected!
             expect(input1.getAttribute("value")).toBe("(___) (___) _____");
             expect(getCursor(input1)).toBe(1);
 
@@ -308,6 +319,7 @@ describe("masked input", () => {
             let input1 = element(by.id("input1"));
             let result = null;
             input1.click(); // be focused!
+            input1.sendKeys(protractor.Key.ARROW_RIGHT); // don't be all selected!
             expect(input1.getAttribute("value")).toBe("(___) (___) _____");
             expect(getCursor(input1)).toBe(1);
 
@@ -582,6 +594,34 @@ describe("masked input", () => {
             expect(getCursor(input6)).toBe(12);
         });
 
+        it("should type characters when selected", () => {
+            let input5 = element(by.id("input5"));
+            let input6 = element(by.id("input6"));
+            let result = null;
+            input6.click(); // be focused and highlighted!
+            expect(input6.getAttribute("value")).toBe("(___) (___) _____");
+
+            input6.sendKeys("3");
+            expect(input6.getAttribute("value")).toBe("(3__) (___) _____");
+            expect(getCursor(input6)).toBe(2);
+
+        });
+
+        it("should delete characters when selected", () => {
+            let input5 = element(by.id("input5"));
+            let input6 = element(by.id("input6"));
+            input6.click(); // be focused and highlighted!
+            input6.sendKeys("3");
+            expect(input6.getAttribute("value")).toBe("(3__) (___) _____");
+
+            input5.click(); // input6, don't be focused!
+            input6.click(); // be focused and highlighted!
+            input6.sendKeys(protractor.Key.BACK_SPACE);
+            expect(input6.getAttribute("value")).toBe("(___) (___) _____");
+
+
+        });
+
         it("should not accept alpha chars (unless it should)", () => {
             let input6 = element(by.id("input6"));
             let result = null;
@@ -665,13 +705,31 @@ describe("masked input", () => {
             expect(getCursor(input6)).toBe(17);
         });
 
-        it("should go to first character on focus when empty", () => {
+        it("should select all on focus", () => {
             let update5 = element(by.id("update5"));
             let input6 = element(by.id("input6"));
             update5.click();
             update5.sendKeys(protractor.Key.TAB);
             expect(browser.driver.switchTo().activeElement().getAttribute("id")).toBe("input6");
-            expect(getCursor(input6)).toBe(1);
+            expect(getSelectionStart(input6)).toBe(0);
+            expect(getSelectionEnd(input6)).toBe(17);
+        });
+
+        it("should move to next caret position when you do screwy action 1", () => {
+            let update5 = element(by.id("update5"));
+            let input6 = element(by.id("input6"));
+            update5.click();
+            update5.sendKeys(protractor.Key.TAB);
+            expect(browser.driver.switchTo().activeElement().getAttribute("id")).toBe("input6");
+
+            browser.actions()
+                .mouseMove(input6, {x: 100, y: 20})
+                .click()
+                .perform();
+            expect(getCursor(input6)).toBe(12);
+
+            input6.sendKeys("3");
+            expect(getCursor(input6)).toBe(13);
         });
     });
 

@@ -30,6 +30,7 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     this.clickHandler = function (e) { return _this.onClick(e); };
                     this.inputHandler = function (e) { return _this.onInput(e); };
                     this.focusHandler = function (e) { return _this.onFocus(e); };
+                    this.selectHandler = function (e) { return _this.onSelect(e); };
                 }
                 MaskedInput.prototype.bind = function () {
                     this.maskChanged();
@@ -42,8 +43,9 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     this.inputElement.addEventListener("keydown", this.keyDownHandler);
                     this.inputElement.addEventListener('keyup', this.keyUpHandler);
                     this.inputElement.addEventListener('input', this.inputHandler);
-                    this.inputElement.addEventListener('click', this.clickHandler);
+                    this.inputElement.addEventListener('mouseup', this.clickHandler);
                     this.inputElement.addEventListener('focus', this.focusHandler);
+                    this.inputElement.addEventListener('select', this.selectHandler);
                     this.caretPos = this.getCaretPosition();
                     this.inputElement.value = this.oldValue;
                     this.updateUIValue(this.oldValue, false, this.minCaretPos, this.minCaretPos);
@@ -52,8 +54,9 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     this.inputElement.removeEventListener("keydown", this.keyDownHandler);
                     this.inputElement.removeEventListener('keyup', this.keyUpHandler);
                     this.inputElement.removeEventListener('input', this.inputHandler);
-                    this.inputElement.removeEventListener('click', this.clickHandler);
+                    this.inputElement.removeEventListener('mouseup', this.clickHandler);
                     this.inputElement.removeEventListener('focus', this.focusHandler);
+                    this.inputElement.removeEventListener('select', this.selectHandler);
                 };
                 Object.defineProperty(MaskedInput.prototype, "maxCaretPos", {
                     get: function () {
@@ -77,6 +80,9 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     enumerable: true,
                     configurable: true
                 });
+                MaskedInput.prototype.onSelect = function (e) {
+                    this.oldSelectionLength = this.getSelectionLength();
+                };
                 MaskedInput.prototype.onClick = function (e) {
                     e = e || {};
                     var valUnmasked = this.unmaskedUIValue;
@@ -89,8 +95,9 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     var isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
                     var isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
                     var caretBumpBack = caretPos > this.minCaretPos;
-                    this.oldSelectionLength = this.getSelectionLength();
+                    this.oldSelectionLength = 0;
                     if (isSelected) {
+                        this.oldCaretPosition = -1;
                         return;
                     }
                     if (isKeyBackspace && this.preventBackspace) {
@@ -123,8 +130,12 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     enumerable: true,
                     configurable: true
                 });
-                MaskedInput.prototype.isAddition = function () {
+                MaskedInput.prototype.isAddition = function (doterriblethings) {
+                    if (doterriblethings === void 0) { doterriblethings = false; }
                     var val = this.unmaskedUIValue;
+                    if (doterriblethings && (this.bindMasking || this.aspnetMasking)) {
+                        val = this.inputElement.value;
+                    }
                     var valOld = this.oldValueUnmasked;
                     var selectionLenOld = this.oldSelectionLength || 0;
                     var _isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
@@ -155,6 +166,9 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     var wasSelected = selectionLenOld > 0;
                     if (this.isSingleAddition() && this.editMode === "overtype") {
                         valUnmasked = this.inputElement.value;
+                        if (caretPosOld === -1) {
+                            caretPosOld = this.masker.getPreviousCaretPos(caretPos);
+                        }
                         if (this.isValidCaretPosition(caretPosOld)) {
                             var newChar = valUnmasked.charAt(caretPosOld);
                             if (this.masker.isValidAt(newChar, caretPosOld)) {
@@ -178,7 +192,7 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     var isKeyBackspace = (this.isDeletion() && (caretPosDelta === -1));
                     var isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
                     var caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
-                    if (wasSelected && this.isAddition()) {
+                    if (wasSelected && this.isAddition(true)) {
                         var startCaretPos = Math.min(caretPos, caretPosOld);
                         if (caretPos < caretPosOld) {
                             startCaretPos--;
@@ -186,11 +200,16 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         if (!this.isValidCaretPosition(startCaretPos)) {
                             startCaretPos = this.masker.getNextCaretPos(startCaretPos);
                         }
-                        var newDelta = this.inputElement.value.length - (this.oldValue.length - Math.abs(caretPosDelta) - 1);
-                        caretPos = startCaretPos + newDelta;
+                        if (this.inputElement.value.length === 1) {
+                            caretPos = this.masker.getNextCaretPos(caretPos);
+                        }
+                        else {
+                            var newDelta = this.inputElement.value.length - (this.oldValue.length - Math.abs(caretPosDelta) - 1);
+                            caretPos = startCaretPos + newDelta;
+                        }
                     }
                     this.oldSelectionLength = this.getSelectionLength();
-                    if (isKeyBackspace && this.preventBackspace) {
+                    if (isKeyBackspace && this.preventBackspace && !wasSelected) {
                         this.inputElement.value = this.oldValue;
                         this.setCaretPosition(caretPosOld);
                         return;
@@ -234,6 +253,8 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         return;
                     }
                     this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
+                    this.inputElement.setSelectionRange(0, this.inputElement.value.length);
+                    this.oldSelectionLength = this.getSelectionLength();
                 };
                 MaskedInput.prototype.onKeyUp = function (e) {
                     e = e || {};

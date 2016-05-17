@@ -29,6 +29,7 @@ export class MaskedInput {
     inputHandler: any;
     clickHandler: any;
     focusHandler: any;
+    selectHandler: any;
 
     isAttached: boolean;
 
@@ -42,6 +43,7 @@ export class MaskedInput {
         this.clickHandler = e => this.onClick(e);
         this.inputHandler = e => this.onInput(e);
         this.focusHandler = e => this.onFocus(e);
+        this.selectHandler = e => this.onSelect(e);
     }
 
     bind() {
@@ -56,8 +58,9 @@ export class MaskedInput {
         this.inputElement.addEventListener("keydown", this.keyDownHandler);
         this.inputElement.addEventListener('keyup', this.keyUpHandler);
         this.inputElement.addEventListener('input', this.inputHandler);
-        this.inputElement.addEventListener('click', this.clickHandler);
+        this.inputElement.addEventListener('mouseup', this.clickHandler);
         this.inputElement.addEventListener('focus', this.focusHandler);
+        this.inputElement.addEventListener('select', this.selectHandler);
         this.caretPos = this.getCaretPosition();
         this.inputElement.value = this.oldValue;
         this.updateUIValue(this.oldValue, false, this.minCaretPos, this.minCaretPos);
@@ -67,8 +70,9 @@ export class MaskedInput {
         this.inputElement.removeEventListener("keydown", this.keyDownHandler);
         this.inputElement.removeEventListener('keyup', this.keyUpHandler);
         this.inputElement.removeEventListener('input', this.inputHandler);
-        this.inputElement.removeEventListener('click', this.clickHandler);
+        this.inputElement.removeEventListener('mouseup', this.clickHandler);
         this.inputElement.removeEventListener('focus', this.focusHandler);
+        this.inputElement.removeEventListener('select', this.selectHandler);
     }
 
     get maxCaretPos() {
@@ -85,6 +89,10 @@ export class MaskedInput {
             return 0;
         }
         return this.masker.minCaretPos();
+    }
+
+    onSelect(e: any) {
+        this.oldSelectionLength = this.getSelectionLength();
     }
 
     onClick(e: any) {
@@ -108,20 +116,16 @@ export class MaskedInput {
         // a character when clicking within a filled input.
         let caretBumpBack = caretPos > this.minCaretPos;
 
-        this.oldSelectionLength = this.getSelectionLength();
-
-        // These events don't require any action
+        this.oldSelectionLength = 0;
         if (isSelected) {
+            this.oldCaretPosition = -1;
             return;
         }
-
         if (isKeyBackspace && this.preventBackspace) {
             this.inputElement.value = this.oldValue;
             this.setCaretPosition(caretPosOld);
             return;
         }
-
-        // Update values
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
     }
 
@@ -141,9 +145,12 @@ export class MaskedInput {
         return unmasked;
     }
 
-    isAddition() {
+    isAddition(doterriblethings: boolean = false) {
         // Case: Typing a character to overwrite a selection
         let val = this.unmaskedUIValue;
+        if(doterriblethings && (this.bindMasking || this.aspnetMasking)) {
+            val = this.inputElement.value;
+        }
         let valOld = this.oldValueUnmasked;
         let selectionLenOld = this.oldSelectionLength || 0;
         let _isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
@@ -181,6 +188,10 @@ export class MaskedInput {
         if(this.isSingleAddition() && this.editMode === "overtype") {
             // if user is holding a key down, we need to fix things up, because onKeyUp won't
             valUnmasked = this.inputElement.value;
+            if(caretPosOld === -1) {
+                // case when was selected, click to unselect isn't being (can't be?) handled elsewhere properly, grr
+                caretPosOld = this.masker.getPreviousCaretPos(caretPos);
+            }
             if(this.isValidCaretPosition(caretPosOld)) {
                 let newChar = valUnmasked.charAt(caretPosOld);
                 if(this.masker.isValidAt(newChar, caretPosOld)) {
@@ -205,10 +216,11 @@ export class MaskedInput {
         let isKeyDelete = (this.isDeletion() && (caretPosDelta === 0) && !wasSelected);
         // Handles cases where caret is moved and placed in front of invalid maskCaretMap position. Logic below
         // ensures that, on click or leftward caret placement, caret is moved leftward until directly right of
-        // non-mask character. Also applied to click since users are (arguably) more likely to backspace // a character when clicking within a filled input.
+        // non-mask character. Also applied to click since users are (arguably) more likely to backspace 
+        // a character when clicking within a filled input.
         let caretBumpBack = (isKeyBackspace) && caretPos > this.minCaretPos;
 
-        if(wasSelected && this.isAddition()) {
+        if(wasSelected && this.isAddition(true)) {
             let startCaretPos = Math.min(caretPos, caretPosOld);
             if(caretPos < caretPosOld) {
                 startCaretPos--; //??
@@ -216,13 +228,17 @@ export class MaskedInput {
             if(!this.isValidCaretPosition(startCaretPos)) {
                 startCaretPos = this.masker.getNextCaretPos(startCaretPos);
             }
-            let newDelta = this.inputElement.value.length -  (this.oldValue.length - Math.abs(caretPosDelta)-1);
-            caretPos = startCaretPos + newDelta;
+            if(this.inputElement.value.length === 1) {
+                caretPos = this.masker.getNextCaretPos(caretPos);
+            }else{
+                let newDelta = this.inputElement.value.length -  (this.oldValue.length - Math.abs(caretPosDelta)-1);
+                caretPos = startCaretPos + newDelta;
+            }
         }
 
         this.oldSelectionLength = this.getSelectionLength();
 
-        if (isKeyBackspace && this.preventBackspace) {
+        if (isKeyBackspace && this.preventBackspace && !wasSelected) {
             this.inputElement.value = this.oldValue;
             this.setCaretPosition(caretPosOld);
             return;
@@ -288,6 +304,8 @@ export class MaskedInput {
 
         // Update values
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
+        this.inputElement.setSelectionRange(0, this.inputElement.value.length);
+        this.oldSelectionLength = this.getSelectionLength();
     }
 
     onKeyUp(e: any) {
