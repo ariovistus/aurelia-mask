@@ -229,7 +229,7 @@ export class MaskedInput {
                 startCaretPos = this.masker.getNextCaretPos(startCaretPos);
             }
             if(this.inputElement.value.length === 1) {
-                caretPos = this.masker.getNextCaretPos(caretPos);
+                caretPos = this.masker.getNextCaretPos(startCaretPos);
             }else{
                 let newDelta = this.inputElement.value.length -  (this.oldValue.length - Math.abs(caretPosDelta)-1);
                 caretPos = startCaretPos + newDelta;

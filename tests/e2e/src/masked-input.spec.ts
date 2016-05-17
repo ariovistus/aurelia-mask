@@ -731,6 +731,14 @@ describe("masked input", () => {
             input6.sendKeys("3");
             expect(getCursor(input6)).toBe(13);
         });
+
+        it("should move to next caret position when you do (not so) screwy action 2", () => {
+            let input7 = element(by.id("input7"));
+            input7.click();
+            input7.sendKeys("1");
+
+            expect(getCursor(input7)).toBe(1);
+        });
     });
 
 /**
