@@ -167,7 +167,7 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     if (this.isSingleAddition() && this.editMode === "overtype") {
                         valUnmasked = this.inputElement.value;
                         if (caretPosOld === -1) {
-                            caretPosOld = this.masker.getPreviousCaretPos(caretPos);
+                            caretPosOld = caretPos - 1;
                         }
                         if (this.isValidCaretPosition(caretPosOld)) {
                             var newChar = valUnmasked.charAt(caretPosOld);
@@ -183,7 +183,9 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         }
                         else {
                             var newChar = this.inputElement.value.charAt(caretPosOld) || "";
-                            caretPos = this.masker.getNextCaretPos(caretPos);
+                            if (!this.isValidCaretPosition(caretPos)) {
+                                caretPos = this.masker.getNextCaretPos(caretPos);
+                            }
                             valUnmasked = this.oldValue.substr(0, caretPos) + newChar + this.oldValue.substr(caretPos + 1);
                             valUnmasked = this.masker.unmaskValue(valUnmasked);
                             caretPos = this.masker.getNextCaretPos(caretPos);

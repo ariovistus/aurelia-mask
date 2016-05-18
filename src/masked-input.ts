@@ -190,7 +190,7 @@ export class MaskedInput {
             valUnmasked = this.inputElement.value;
             if(caretPosOld === -1) {
                 // case when was selected, click to unselect isn't being (can't be?) handled elsewhere properly, grr
-                caretPosOld = this.masker.getPreviousCaretPos(caretPos);
+                caretPosOld = caretPos-1;
             }
             if(this.isValidCaretPosition(caretPosOld)) {
                 let newChar = valUnmasked.charAt(caretPosOld);
@@ -204,7 +204,9 @@ export class MaskedInput {
                 caretPos = this.masker.getNextCaretPos(caretPosOld);
             }else {
                 let newChar = this.inputElement.value.charAt(caretPosOld) || "";
-                caretPos = this.masker.getNextCaretPos(caretPos);
+                if(!this.isValidCaretPosition(caretPos)) {
+                    caretPos = this.masker.getNextCaretPos(caretPos);
+                }
                 valUnmasked = this.oldValue.substr(0, caretPos) + newChar + this.oldValue.substr(caretPos+1);
                 valUnmasked = this.masker.unmaskValue(valUnmasked);
                 caretPos = this.masker.getNextCaretPos(caretPos);
