@@ -182,16 +182,16 @@ export class MaskedInput {
         let valUnmaskedOld = this.oldValueUnmasked;
         let caretPos = this.getCaretPosition() || 0;
         let caretPosOld = this.oldCaretPosition || 0;
+        if(caretPosOld === -1) {
+            // case when was selected, click to unselect isn't being (can't be?) handled elsewhere properly, grr
+            caretPosOld = caretPos-1;
+        }
         let caretPosDelta = caretPos - caretPosOld;
         let selectionLenOld = this.oldSelectionLength || 0;
         let wasSelected = selectionLenOld > 0;
         if(this.isSingleAddition() && this.editMode === "overtype") {
             // if user is holding a key down, we need to fix things up, because onKeyUp won't
             valUnmasked = this.inputElement.value;
-            if(caretPosOld === -1) {
-                // case when was selected, click to unselect isn't being (can't be?) handled elsewhere properly, grr
-                caretPosOld = caretPos-1;
-            }
             if(this.isValidCaretPosition(caretPosOld)) {
                 let newChar = valUnmasked.charAt(caretPosOld);
                 if(this.masker.isValidAt(newChar, caretPosOld)) {
@@ -227,14 +227,34 @@ export class MaskedInput {
             if(caretPos < caretPosOld) {
                 startCaretPos--; //??
             }
+
+            let oldSelectionStart = startCaretPos;
+            let oldSuffix = this.oldValue.substr(oldSelectionStart+selectionLenOld);
+            let oldPrefix = this.oldValue.substr(0, oldSelectionStart);
+            let newPart = this.inputElement.value;
+            if(newPart.startsWith(oldPrefix)) {
+                newPart = newPart.substr(oldPrefix.length);
+            }
+            if(newPart.endsWith(oldSuffix)) {
+                newPart = newPart.substr(0, newPart.length-oldSuffix.length);
+            }
             if(!this.isValidCaretPosition(startCaretPos)) {
                 startCaretPos = this.masker.getNextCaretPos(startCaretPos);
             }
             if(this.inputElement.value.length === 1) {
                 caretPos = this.masker.getNextCaretPos(startCaretPos);
             }else{
-                let newDelta = this.inputElement.value.length -  (this.oldValue.length - Math.abs(caretPosDelta)-1);
+                let newDelta = this.inputElement.value.length -  (this.oldValue.length - selectionLenOld);
                 caretPos = startCaretPos + newDelta;
+            }
+
+            let allPlaceholder = this.masker.maskValue("");
+            if(newPart.length < selectionLenOld) {
+                let caretDiff = startCaretPos - oldSelectionStart;
+                let fill = allPlaceholder.substr(startCaretPos+newPart.length, selectionLenOld-newPart.length - caretDiff);
+                let fillPrefix = allPlaceholder.substr(oldSelectionStart, caretDiff);
+                valUnmasked = oldPrefix + fillPrefix + newPart + fill + oldSuffix;
+                valUnmasked = this.masker.unmaskValue(valUnmasked);
             }
         }
 

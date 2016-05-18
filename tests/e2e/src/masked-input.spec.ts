@@ -562,7 +562,7 @@ describe("masked input", () => {
 
 
             input6.sendKeys("2");
-            expect(input6.getAttribute("value")).toBe("(123) (456) 7201_");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 72_01");
             expect(getCursor(input6)).toBe(14);
 
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
@@ -571,14 +571,14 @@ describe("masked input", () => {
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
 
             input6.sendKeys("3");
-            expect(input6.getAttribute("value")).toBe("(123) (456) 301__");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 3__01");
             expect(getCursor(input6)).toBe(13);
 
             input6.sendKeys(protractor.Key.ARROW_DOWN);
             input6.sendKeys(protractor.Key.ARROW_LEFT);
             input6.sendKeys(protractor.Key.ARROW_LEFT);
             input6.sendKeys(protractor.Key.ARROW_LEFT);
-            expect(input6.getAttribute("value")).toBe("(123) (456) 301__");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 3__01");
             expect(getCursor(input6)).toBe(14);
 
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
@@ -586,11 +586,11 @@ describe("masked input", () => {
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
             input6.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_LEFT));
-            expect(input6.getAttribute("value")).toBe("(123) (456) 301__");
+            expect(input6.getAttribute("value")).toBe("(123) (456) 3__01");
             expect(getCursor(input6)).toBe(9);
 
             input6.sendKeys("7");
-            expect(input6.getAttribute("value")).toBe("(123) (457) 1____");
+            expect(input6.getAttribute("value")).toBe("(123) (457) ___01");
             expect(getCursor(input6)).toBe(12);
         });
 
@@ -754,6 +754,52 @@ describe("masked input", () => {
 
             expect(input7.getAttribute("value")).toBe("__/1__/____");
             expect(getCursor(input7)).toBe(4);
+
+        });
+
+        it("should move to next caret position when you do (not so) screwy action 4", () => {
+            let input7 = element(by.id("input7"));
+            input7.click();
+            input7.sendKeys(protractor.Key.ARROW_DOWN);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+            expect(getCursor(input7)).toBe(6);
+            input7.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_RIGHT));
+            input7.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_RIGHT));
+            input7.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_RIGHT));
+            input7.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_RIGHT));
+
+            expect(getSelectionStart(input7)).toBe(6);
+            expect(getSelectionEnd(input7)).toBe(10);
+
+            input7.sendKeys("1");
+            expect(input7.getAttribute("value")).toBe("__/___/1___");
+            expect(getCursor(input7)).toBe(8);
+
+        });
+        
+        it("should preserve position of chars on select and type", () => {
+            let input7 = element(by.id("input7"));
+            input7.click();
+            input7.sendKeys(protractor.Key.ARROW_DOWN);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+            input7.sendKeys(protractor.Key.ARROW_LEFT);
+
+            input7.sendKeys("1");
+            expect(input7.getAttribute("value")).toBe("__/___/1___");
+            expect(getCursor(input7)).toBe(8);
+
+            input7.sendKeys(protractor.Key.ARROW_UP);
+            input7.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_RIGHT));
+            input7.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.ARROW_RIGHT));
+
+            input7.sendKeys("2");
+            expect(input7.getAttribute("value")).toBe("2_/___/1___");
+            expect(getCursor(input7)).toBe(1);
 
         });
     });

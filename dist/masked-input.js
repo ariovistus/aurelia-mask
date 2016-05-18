@@ -161,14 +161,14 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                     var valUnmaskedOld = this.oldValueUnmasked;
                     var caretPos = this.getCaretPosition() || 0;
                     var caretPosOld = this.oldCaretPosition || 0;
+                    if (caretPosOld === -1) {
+                        caretPosOld = caretPos - 1;
+                    }
                     var caretPosDelta = caretPos - caretPosOld;
                     var selectionLenOld = this.oldSelectionLength || 0;
                     var wasSelected = selectionLenOld > 0;
                     if (this.isSingleAddition() && this.editMode === "overtype") {
                         valUnmasked = this.inputElement.value;
-                        if (caretPosOld === -1) {
-                            caretPosOld = caretPos - 1;
-                        }
                         if (this.isValidCaretPosition(caretPosOld)) {
                             var newChar = valUnmasked.charAt(caretPosOld);
                             if (this.masker.isValidAt(newChar, caretPosOld)) {
@@ -199,6 +199,16 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                         if (caretPos < caretPosOld) {
                             startCaretPos--;
                         }
+                        var oldSelectionStart = startCaretPos;
+                        var oldSuffix = this.oldValue.substr(oldSelectionStart + selectionLenOld);
+                        var oldPrefix = this.oldValue.substr(0, oldSelectionStart);
+                        var newPart = this.inputElement.value;
+                        if (newPart.startsWith(oldPrefix)) {
+                            newPart = newPart.substr(oldPrefix.length);
+                        }
+                        if (newPart.endsWith(oldSuffix)) {
+                            newPart = newPart.substr(0, newPart.length - oldSuffix.length);
+                        }
                         if (!this.isValidCaretPosition(startCaretPos)) {
                             startCaretPos = this.masker.getNextCaretPos(startCaretPos);
                         }
@@ -206,8 +216,16 @@ System.register(['aurelia-framework', "./masker"], function(exports_1) {
                             caretPos = this.masker.getNextCaretPos(startCaretPos);
                         }
                         else {
-                            var newDelta = this.inputElement.value.length - (this.oldValue.length - Math.abs(caretPosDelta) - 1);
+                            var newDelta = this.inputElement.value.length - (this.oldValue.length - selectionLenOld);
                             caretPos = startCaretPos + newDelta;
+                        }
+                        var allPlaceholder = this.masker.maskValue("");
+                        if (newPart.length < selectionLenOld) {
+                            var caretDiff = startCaretPos - oldSelectionStart;
+                            var fill = allPlaceholder.substr(startCaretPos + newPart.length, selectionLenOld - newPart.length - caretDiff);
+                            var fillPrefix = allPlaceholder.substr(oldSelectionStart, caretDiff);
+                            valUnmasked = oldPrefix + fillPrefix + newPart + fill + oldSuffix;
+                            valUnmasked = this.masker.unmaskValue(valUnmasked);
                         }
                     }
                     this.oldSelectionLength = this.getSelectionLength();
