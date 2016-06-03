@@ -1,11 +1,4 @@
-System.register([], function(exports_1) {
-    function configure(aurelia, config) {
-    }
-    exports_1("configure", configure);
-    return {
-        setters:[],
-        execute: function() {
-        }
-    }
-});
+function configure(aurelia, config) {
+}
+exports.configure = configure;
 //# sourceMappingURL=index.js.map

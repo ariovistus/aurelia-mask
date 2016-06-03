@@ -6,6 +6,7 @@
       "type": "git",
       "url": "https://github.com/ariovistus/aurelia-mask.git"
   },
+  "main": "dist/index.js",
   "jspm": {
     "directories": {
       "lib": "dist"

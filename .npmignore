@@ -1,0 +1,15 @@
+coverage/
+jspm_packages/
+sample/
+src/
+tests/
+typings/
+test_makey.ps1
+protractor_makey.ps1
+runtests.sh
+karma.conf.js
+Makefile
+config.js
+*.ps1
+.travis.yml
+tsconfig.json
