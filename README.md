@@ -14,18 +14,44 @@ Apply a mask on an input field so the user can only type pre-determined pattern.
 
 jspm install aurelia-mask=github:ariovistus/aurelia-mask
 
+### npm
+
+npm install aurelia-mask
+
 ## Usage
 
 in your template:
 
 ```html
-<require from="aurelia-mask/masked-input"></require>
-
-...
-
 <input masked="value.bind: myvalue; mask.bind: mymask" />
-
 ```
+
+be sure to include the necessary require in the template:
+
+```html
+<require from="aurelia-mask/masked-input"></require>
+```
+
+or register it globally:
+
+```js
+aurelia.use
+    .standardConfiguration()
+    ...
+    .globalResources("aurelia-mask/masked-input")
+    ...
+```
+
+may need to be this if you're using npm:
+
+```js
+aurelia.use
+    .standardConfiguration()
+    ...
+    .globalResources("aurelia-mask/dist/masked-input")
+    ...
+```
+
 
 notes
 
