@@ -9,6 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var aurelia_framework_1 = require('aurelia-framework');
 var masker_1 = require("./masker");
+function findFirstInputElement(elt) {
+    var elts = elt.getElementsByTagName("input");
+    if (elts.length == 0) {
+        throw new Error("'masked' attribute is not on an input element");
+    }
+    return elts[0];
+}
 var MaskedInput = (function () {
     function MaskedInput(element) {
         var _this = this;
@@ -29,7 +36,7 @@ var MaskedInput = (function () {
     };
     MaskedInput.prototype.attached = function () {
         this.isAttached = true;
-        this.inputElement = this.element;
+        this.findInputElement();
         this.inputElement.addEventListener("keydown", this.keyDownHandler);
         this.inputElement.addEventListener('keyup', this.keyUpHandler);
         this.inputElement.addEventListener('input', this.inputHandler);
@@ -39,6 +46,17 @@ var MaskedInput = (function () {
         this.caretPos = this.getCaretPosition();
         this.inputElement.value = this.oldValue;
         this.updateUIValue(this.oldValue, false, this.minCaretPos, this.minCaretPos);
+    };
+    MaskedInput.prototype.findInputElement = function () {
+        if (this.element.tagName.toLowerCase() === "input") {
+            this.inputElement = this.element;
+        }
+        else if (this.findInput != null) {
+            this.inputElement = this.findInput(this.element);
+        }
+        else {
+            this.inputElement = findFirstInputElement(this.element);
+        }
     };
     MaskedInput.prototype.detached = function () {
         this.inputElement.removeEventListener("keydown", this.keyDownHandler);
@@ -455,6 +473,10 @@ var MaskedInput = (function () {
         aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: "insert" }), 
         __metadata('design:type', String)
     ], MaskedInput.prototype, "editMode", void 0);
+    __decorate([
+        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: null }), 
+        __metadata('design:type', Function)
+    ], MaskedInput.prototype, "findInput", void 0);
     MaskedInput = __decorate([
         aurelia_framework_1.customAttribute('masked'),
         aurelia_framework_1.inject(Element), 

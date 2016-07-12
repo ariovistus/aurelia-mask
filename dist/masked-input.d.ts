@@ -11,6 +11,7 @@ export declare class MaskedInput {
     aspnetMasking: boolean;
     placeholder: string;
     editMode: string;
+    findInput: (Element) => HTMLInputElement;
     masker: Masker;
     preventBackspace: boolean;
     oldValue: string;
@@ -28,6 +29,7 @@ export declare class MaskedInput {
     constructor(element: Element);
     bind(): void;
     attached(): void;
+    findInputElement(): void;
     detached(): void;
     maxCaretPos: number;
     minCaretPos: number;

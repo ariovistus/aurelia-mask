@@ -69,6 +69,23 @@
                 <td> ${value7} </td>
                 <td> <button id='update7' click.trigger="update(7)">Update</button> </td>
             </tr>
+            <tr>
+                <td title='e.g. on a shadow dom element'> on non-input elements </td>
+                <td masked="value.bind: value8; mask.bind: mask;">
+                    <input id='input8'/>
+                </td>
+                <td> ${value8} </td>
+                <td> <button id='update8' click.trigger="update(8)">Update</button> </td>
+            </tr>
+            <tr>
+                <td title='e.g. on a really weird shadow dom element'> on non-input elements <br/>with custom find</td>
+                <td masked="value.bind: value9; mask.bind: mask; find-input.bind: findSecondInput">
+                    <input id='not_input9' style="display:none" />
+                    <input id='input9'/>
+                </td>
+                <td> ${value9} </td>
+                <td> <button id='update9' click.trigger="update(9)">Update</button> </td>
+            </tr>
         </tbody>
     </table>
 </template>

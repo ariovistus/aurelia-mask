@@ -1,6 +1,14 @@
 ﻿import {customAttribute, bindable, bindingMode, inject} from 'aurelia-framework';
 import {getMasker, Masker} from "./masker";
 
+function findFirstInputElement(elt: Element) {
+    var elts = elt.getElementsByTagName("input");
+    if(elts.length == 0) {
+        throw new Error("'masked' attribute is not on an input element");
+    }
+    return <HTMLInputElement>elts[0];
+}
+
 @customAttribute('masked')
 @inject(Element)
 export class MaskedInput {
@@ -15,6 +23,9 @@ export class MaskedInput {
     @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: false}) aspnetMasking: boolean
     @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: null}) placeholder: string;
     @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: "insert"}) editMode: string;
+
+    @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: null}) 
+        findInput: (Element) => HTMLInputElement;
 
     masker: Masker;
     preventBackspace: boolean;
@@ -54,7 +65,7 @@ export class MaskedInput {
 
     attached() {
         this.isAttached = true;
-        this.inputElement = (<HTMLInputElement>this.element);
+        this.findInputElement();
         this.inputElement.addEventListener("keydown", this.keyDownHandler);
         this.inputElement.addEventListener('keyup', this.keyUpHandler);
         this.inputElement.addEventListener('input', this.inputHandler);
@@ -64,6 +75,16 @@ export class MaskedInput {
         this.caretPos = this.getCaretPosition();
         this.inputElement.value = this.oldValue;
         this.updateUIValue(this.oldValue, false, this.minCaretPos, this.minCaretPos);
+    }
+
+    findInputElement() {
+        if(this.element.tagName.toLowerCase() === "input") {
+            this.inputElement = (<HTMLInputElement>this.element);
+        }else if (this.findInput != null){
+            this.inputElement = this.findInput(this.element);
+        }else{
+            this.inputElement = findFirstInputElement(this.element);
+        }
     }
 
     detached() {
