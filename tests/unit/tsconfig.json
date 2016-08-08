@@ -12,12 +12,12 @@
     },
     "filesGlob": [
         "../jasmine/**/*.d.ts",
-        "../../typings/node/*.d.ts",
+        "../../typings_custom/node/*.d.ts",
         "src/*.ts"
     ],
     "files": [
         "../jasmine/jasmine.d.ts",
-        "../../typings/node/node-0.8.8.d.ts",
+        "../../typings_custom/node/node-0.8.8.d.ts",
         "src/masked-input.spec.ts",
         "src/masker.spec.ts"
     ]
