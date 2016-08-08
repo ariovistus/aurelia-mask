@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "aurelia-framework": "github:aurelia/framework"
+  }
+}

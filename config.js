@@ -92,9 +92,6 @@ System.config({
     "github:jspm/nodelibs-timers@0.1.0": {
       "timers-browserify": "npm:timers-browserify@1.4.2"
     },
-    "github:jspm/nodelibs-tty@0.1.0": {
-      "tty-browserify": "npm:tty-browserify@0.0.0"
-    },
     "github:jspm/nodelibs-url@0.1.0": {
       "url": "npm:url@0.10.3"
     },
@@ -392,12 +389,7 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:debug@2.2.0": {
-      "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "ms": "npm:ms@0.7.1",
-      "net": "github:jspm/nodelibs-net@0.1.2",
-      "process": "github:jspm/nodelibs-process@0.1.2",
-      "tty": "github:jspm/nodelibs-tty@0.1.0",
-      "util": "github:jspm/nodelibs-util@0.1.0"
+      "ms": "npm:ms@0.7.1"
     },
     "npm:delayed-stream@1.0.0": {
       "stream": "github:jspm/nodelibs-stream@0.1.0",
