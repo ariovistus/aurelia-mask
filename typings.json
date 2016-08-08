@@ -1,4 +1,5 @@
 {
+  "name": "aurelia-mask",
   "dependencies": {
     "aurelia-framework": "github:aurelia/framework"
   }
