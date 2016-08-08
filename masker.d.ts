@@ -1,4 +1,10 @@
-export declare function getMasker(options: any): Masker;
+export declare function getMasker(options: IMaskOptions): Masker;
+export interface IMaskOptions {
+    maskFormat: string;
+    bindMasking: boolean;
+    placeholder?: string;
+    aspnetMasking?: boolean;
+}
 export declare class MaskOptions {
     maskFormat: string;
     bindMasking: boolean;
