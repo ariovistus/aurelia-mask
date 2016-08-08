@@ -1,6 +1,7 @@
 NPM = ./node_modules
 all: $(NPM)
 	./node_modules/.bin/tsc -d -p ./ --outDir dist/
+	cp dist/*.d.ts .
 
 $(NPM):
 	npm install
