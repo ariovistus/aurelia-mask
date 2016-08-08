@@ -1,5 +1,6 @@
 {
   "name": "aurelia-mask",
+  "typings": "./dist/index.d.ts",
   "dependencies": {
     "aurelia-framework": "github:aurelia/framework"
   }
