@@ -1,6 +1,12 @@
 {
   "name": "aurelia-mask",
-  "main": "./dist/index.d.ts",
+  "main": "dist/index.d.ts",
+  "files": [
+      "dist/index.d.ts",
+      "dist/mask.d.ts",
+      "dist/masker.d.ts",
+      "dist/masked-input.d.ts"
+  ],
   "dependencies": {
     "aurelia-framework": "github:aurelia/framework"
   }
