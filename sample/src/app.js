@@ -1,6 +1,7 @@
 export class App {
   mask = '(999) (999) **999';
   mask2 = '**/***/****'; 
+  mask3 = "(999) 999-9999";
   findSecondInput = _findSecondInput;
 
   update(i) {

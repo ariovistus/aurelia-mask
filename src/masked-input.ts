@@ -169,12 +169,14 @@ export class MaskedInput {
     isAddition(doterriblethings: boolean = false) {
         // Case: Typing a character to overwrite a selection
         let val = this.unmaskedUIValue;
+        let maskedVal = this.inputElement.value;
         if(doterriblethings && (this.bindMasking || this.aspnetMasking)) {
             val = this.inputElement.value;
         }
         let valOld = this.oldValueUnmasked;
+        let oldMaskedVal = this.oldValue;
         let selectionLenOld = this.oldSelectionLength || 0;
-        let _isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
+        let _isAddition = (val.length > valOld.length) || (selectionLenOld && maskedVal.length > oldMaskedVal.length - selectionLenOld);
         return _isAddition;
     }
 

@@ -141,12 +141,14 @@ var MaskedInput = (function () {
     MaskedInput.prototype.isAddition = function (doterriblethings) {
         if (doterriblethings === void 0) { doterriblethings = false; }
         var val = this.unmaskedUIValue;
+        var maskedVal = this.inputElement.value;
         if (doterriblethings && (this.bindMasking || this.aspnetMasking)) {
             val = this.inputElement.value;
         }
         var valOld = this.oldValueUnmasked;
+        var oldMaskedVal = this.oldValue;
         var selectionLenOld = this.oldSelectionLength || 0;
-        var _isAddition = (val.length > valOld.length) || (selectionLenOld && val.length > valOld.length - selectionLenOld);
+        var _isAddition = (val.length > valOld.length) || (selectionLenOld && maskedVal.length > oldMaskedVal.length - selectionLenOld);
         return _isAddition;
     };
     MaskedInput.prototype.isSingleAddition = function () {

@@ -1,4 +1,4 @@
-﻿export function getMasker(options: any): Masker {
+﻿export function getMasker(options: IMaskOptions): Masker {
     let maskers : Map<any, Masker> = _maskers;
     let key = new MaskOptions();
     key.maskFormat = options.maskFormat;
@@ -11,6 +11,13 @@
         maskers[strkey] = new Masker(key);
     }
     return maskers[strkey];
+}
+
+export interface IMaskOptions {
+    maskFormat: string;
+    bindMasking: boolean;
+    placeholder?: string;
+    aspnetMasking?: boolean;
 }
 
 export class MaskOptions {

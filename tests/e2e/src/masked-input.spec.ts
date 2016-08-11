@@ -102,6 +102,18 @@ describe("masked input", () => {
             expect(getCursor(input1)).toBe(7);
         });
 
+        it("should delete everything selected", () => {
+            let input1 = element(by.id("input1"));
+            let input2 = element(by.id("input2"));
+
+            input1.sendKeys("(233) (223) 23232");
+            input2.click();
+            input1.click();
+            // todo: verify everything is selected?
+            input1.sendKeys(protractor.Key.BACK_SPACE);
+            expect(input1.getAttribute("value")).toBe("(___) (___) _____");
+        });
+
         it("should behave with backspace", () => {
             let input1 = element(by.id("input1"));
             let result = null;
