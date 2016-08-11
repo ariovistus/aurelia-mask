@@ -251,33 +251,40 @@ export class MaskedInput {
                 startCaretPos--; //??
             }
 
-            let oldSelectionStart = startCaretPos;
-            let oldSuffix = this.oldValue.substr(oldSelectionStart+selectionLenOld);
-            let oldPrefix = this.oldValue.substr(0, oldSelectionStart);
-            let newPart = this.inputElement.value;
-            if(newPart.startsWith(oldPrefix)) {
-                newPart = newPart.substr(oldPrefix.length);
-            }
-            if(newPart.endsWith(oldSuffix)) {
-                newPart = newPart.substr(0, newPart.length-oldSuffix.length);
-            }
-            if(!this.isValidCaretPosition(startCaretPos)) {
-                startCaretPos = this.masker.getNextCaretPos(startCaretPos);
-            }
-            if(this.inputElement.value.length === 1) {
-                caretPos = this.masker.getNextCaretPos(startCaretPos);
-            }else{
-                let newDelta = this.inputElement.value.length -  (this.oldValue.length - selectionLenOld);
+            if(selectionLenOld == this.oldValue.length && this.editMode === "insert") {
+                // value in inputElement might not be masked properly yet
+                let maskedValue = this.masker.maskValue(this.inputElement.value);
+                let newDelta = maskedValue.length -  (this.oldValue.length - selectionLenOld);
                 caretPos = startCaretPos + newDelta;
-            }
-
-            let allPlaceholder = this.masker.maskValue("");
-            if(newPart.length < selectionLenOld) {
-                let caretDiff = startCaretPos - oldSelectionStart;
-                let fill = allPlaceholder.substr(startCaretPos+newPart.length, selectionLenOld-newPart.length - caretDiff);
-                let fillPrefix = allPlaceholder.substr(oldSelectionStart, caretDiff);
-                valUnmasked = oldPrefix + fillPrefix + newPart + fill + oldSuffix;
-                valUnmasked = this.masker.unmaskValue(valUnmasked);
+            }else{
+                let oldSelectionStart = startCaretPos;
+                let oldSuffix = this.oldValue.substr(oldSelectionStart+selectionLenOld);
+                let oldPrefix = this.oldValue.substr(0, oldSelectionStart);
+                let newPart = this.inputElement.value;
+                if(newPart.startsWith(oldPrefix)) {
+                    newPart = newPart.substr(oldPrefix.length);
+                }
+                if(newPart.endsWith(oldSuffix)) {
+                    newPart = newPart.substr(0, newPart.length-oldSuffix.length);
+                }
+                if(!this.isValidCaretPosition(startCaretPos)) {
+                    startCaretPos = this.masker.getNextCaretPos(startCaretPos);
+                }
+                if(this.inputElement.value.length === 1) {
+                    caretPos = this.masker.getNextCaretPos(startCaretPos);
+                }else{
+                    // todo: this can still calculate caretPos wrong e.g. when user pastes into a partial selection
+                    let newDelta = this.inputElement.value.length - (this.oldValue.length - selectionLenOld);
+                    caretPos = startCaretPos + newDelta;
+                }
+                let allPlaceholder = this.masker.maskValue("");
+                if(newPart.length < selectionLenOld) {
+                    let caretDiff = startCaretPos - oldSelectionStart;
+                    let fill = allPlaceholder.substr(startCaretPos+newPart.length, selectionLenOld-newPart.length - caretDiff);
+                    let fillPrefix = allPlaceholder.substr(oldSelectionStart, caretDiff);
+                    valUnmasked = oldPrefix + fillPrefix + newPart + fill + oldSuffix;
+                    valUnmasked = this.masker.unmaskValue(valUnmasked);
+                }
             }
         }
 

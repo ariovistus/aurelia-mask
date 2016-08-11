@@ -381,6 +381,42 @@ describe("masked input", () => {
             expect(getCursor(input1)).toBe(12);
         });
 
+        it("should send cursor to the end on replace all paste", () => {
+            let input9 = element(by.id("input9"));
+
+            let input10 = element(by.id("input10"));
+            let display10 = element(by.id("display10"));
+            let update9 = element(by.id("update9"));
+            let update10 = element(by.id("update10"));
+
+            input9.sendKeys("3334443333");
+            var results = browser.executeScript([
+                "var range = document.createRange();",
+                "range.selectNode(document.body.querySelector('#display9'));",
+                "var sel = window.getSelection();",
+                "sel.removeAllRanges();",
+                "sel.addRange(range);",
+                "var display9 = document.body.querySelector('#display9');",
+                "var text = display9.textContent.trim();",
+                "var elt = document.createElement('input');",
+                "elt.setAttribute('id', 'durpgang');",
+                "elt.value = text;",
+                "document.body.appendChild(elt);",
+                "return sel;"
+            ].join(""));
+            results.then(x => {
+                var durpgang = element(by.id("durpgang"));
+                durpgang.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, "a"));
+                durpgang.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, "c"));
+                input10.click();
+                input10.sendKeys(protractor.Key.chord(protractor.Key.SHIFT, protractor.Key.TAB));
+                update9.sendKeys(protractor.Key.TAB);
+                input10.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, "v"));
+                expect(getCursor(input10)).toBe(14);
+
+            });
+        });
+
         it("should be bound to model", () => {
             let input1 = element(by.id("input1"));
             let update1 = element(by.id("update1"));
