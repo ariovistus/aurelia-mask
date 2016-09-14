@@ -9,6 +9,7 @@
   },
   "main": "dist/index.js",
   "jspm": {
+    "main": "index",
     "directories": {
       "lib": "dist"
     },
@@ -39,8 +40,5 @@
     "protractor": "^3.2.2",
     "tsconfig-glob": "^0.4.3",
     "typescript": "~1.7.5"
-  },
-  "directories": {
-    "lib": "dist"
   }
 }
