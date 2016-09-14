@@ -209,33 +209,40 @@ var MaskedInput = (function () {
             if (caretPos < caretPosOld) {
                 startCaretPos--;
             }
-            var oldSelectionStart = startCaretPos;
-            var oldSuffix = this.oldValue.substr(oldSelectionStart + selectionLenOld);
-            var oldPrefix = this.oldValue.substr(0, oldSelectionStart);
-            var newPart = this.inputElement.value;
-            if (newPart.startsWith(oldPrefix)) {
-                newPart = newPart.substr(oldPrefix.length);
-            }
-            if (newPart.endsWith(oldSuffix)) {
-                newPart = newPart.substr(0, newPart.length - oldSuffix.length);
-            }
-            if (!this.isValidCaretPosition(startCaretPos)) {
-                startCaretPos = this.masker.getNextCaretPos(startCaretPos);
-            }
-            if (this.inputElement.value.length === 1) {
-                caretPos = this.masker.getNextCaretPos(startCaretPos);
-            }
-            else {
-                var newDelta = this.inputElement.value.length - (this.oldValue.length - selectionLenOld);
+            if (selectionLenOld == this.oldValue.length && this.editMode === "insert") {
+                var maskedValue = this.masker.maskValue(this.inputElement.value);
+                var newDelta = maskedValue.length - (this.oldValue.length - selectionLenOld);
                 caretPos = startCaretPos + newDelta;
             }
-            var allPlaceholder = this.masker.maskValue("");
-            if (newPart.length < selectionLenOld) {
-                var caretDiff = startCaretPos - oldSelectionStart;
-                var fill = allPlaceholder.substr(startCaretPos + newPart.length, selectionLenOld - newPart.length - caretDiff);
-                var fillPrefix = allPlaceholder.substr(oldSelectionStart, caretDiff);
-                valUnmasked = oldPrefix + fillPrefix + newPart + fill + oldSuffix;
-                valUnmasked = this.masker.unmaskValue(valUnmasked);
+            else {
+                var oldSelectionStart = startCaretPos;
+                var oldSuffix = this.oldValue.substr(oldSelectionStart + selectionLenOld);
+                var oldPrefix = this.oldValue.substr(0, oldSelectionStart);
+                var newPart = this.inputElement.value;
+                if (newPart.startsWith(oldPrefix)) {
+                    newPart = newPart.substr(oldPrefix.length);
+                }
+                if (newPart.endsWith(oldSuffix)) {
+                    newPart = newPart.substr(0, newPart.length - oldSuffix.length);
+                }
+                if (!this.isValidCaretPosition(startCaretPos)) {
+                    startCaretPos = this.masker.getNextCaretPos(startCaretPos);
+                }
+                if (this.inputElement.value.length === 1) {
+                    caretPos = this.masker.getNextCaretPos(startCaretPos);
+                }
+                else {
+                    var newDelta = this.inputElement.value.length - (this.oldValue.length - selectionLenOld);
+                    caretPos = startCaretPos + newDelta;
+                }
+                var allPlaceholder = this.masker.maskValue("");
+                if (newPart.length < selectionLenOld) {
+                    var caretDiff = startCaretPos - oldSelectionStart;
+                    var fill = allPlaceholder.substr(startCaretPos + newPart.length, selectionLenOld - newPart.length - caretDiff);
+                    var fillPrefix = allPlaceholder.substr(oldSelectionStart, caretDiff);
+                    valUnmasked = oldPrefix + fillPrefix + newPart + fill + oldSuffix;
+                    valUnmasked = this.masker.unmaskValue(valUnmasked);
+                }
             }
         }
         this.oldSelectionLength = this.getSelectionLength();
