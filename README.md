@@ -42,6 +42,12 @@ aurelia.use
     ...
 ```
 
+If you have 1.2 or later you can just reference the package:
+
+```html
+<require from="aurelia-mask"></require>
+```
+
 may need to be this if you're using npm:
 
 ```js
@@ -56,7 +62,7 @@ aurelia.use
 notes
 
 - do not apply a value binding to the input, that will interfere with the plumbing
-```
+```html
     <!-- bad! -->
     <input masked="..." value.bind="myvalue" />
 ```
