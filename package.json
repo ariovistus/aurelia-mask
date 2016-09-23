@@ -9,7 +9,7 @@
   },
   "main": "dist/index.js",
   "jspm": {
-    "main": "index",
+    "main": "masked-input",
     "directories": {
       "lib": "dist"
     },
