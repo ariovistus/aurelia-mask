@@ -2,20 +2,20 @@
 
 import 'aurelia-polyfills';
 import {initialize} from 'aurelia-pal-browser';
-import {Masker, getMasker} from "src/masker";
-import {MaskedInput} from "src/masked-input";
+import {Masker, getMasker} from "../../../dist/masker";
+import {MaskedInput} from "../../../dist/masked-input";
 import {Container} from "aurelia-dependency-injection";
 import {TemplatingEngine} from "aurelia-templating";
 
 function makeInputEvent() {
     let e = document.createEvent("Event");
-    e.initEvent("input", true, true, window);
+    e.initEvent("input", true, true/*, window*/);
     return e;
 }
 
 function makeFocusEvent() {
     let e = document.createEvent("Event");
-    e.initEvent("focus", true, true, window);
+    e.initEvent("focus", true, true/*, window*/);
     return e;
 }
 
@@ -28,7 +28,7 @@ function makeKeyupEvent(key) {
     if(typeof keyCode == 'string') {
         keyCode = keyCode.charCodeAt(0);
     }
-    let e = document.createEvent("KeyboardEvent");
+    let e : any = document.createEvent("KeyboardEvent");
     e.initEvent(
         "keyup", // type
         true, //  bubbles

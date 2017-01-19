@@ -1,6 +1,6 @@
 /// <reference path="../../jasmine/jasmine.d.ts" />
 
-import {Masker, getMasker} from "src/masker";
+import {Masker, getMasker} from "../../../dist/masker";
 
 describe("getMasker", () => {
     it("should cache masker objects", () => {
@@ -137,16 +137,9 @@ describe("Masker", () => {
         }
     });
     
-    it("should work with numbers", () => {
-        var masker = getMasker({maskFormat: "99", bindMasking: false});
-        expect(masker.maskValue(12)).toBe("12");
-    });
-
     it("should get correct max caret position with numbers", () => {
         var masker = getMasker({maskFormat: "99", bindMasking: false});
         expect(masker.maxCaretPos("12")).toBe(2);
-        expect(masker.maxCaretPos(12)).toBe(2);
-        expect(masker.maxCaretPos(9)).toBe(1);
     });
 
     it("should tell me what the heck getMaskComponents is doing", () => {

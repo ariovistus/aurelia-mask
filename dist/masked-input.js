@@ -31,7 +31,13 @@ var MaskedInput = (function () {
     }
     MaskedInput.prototype.bind = function () {
         this.maskChanged();
-        this.oldValue = this.masker.maskValue(this.value);
+        if (masker_1.isNumeric(this.value)) {
+            this.valueMode = ValueMode.Num;
+        }
+        else {
+            this.valueMode = ValueMode.Str;
+        }
+        this.oldValue = this.masker.maskValue(this.numberToString(this.value));
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     };
     MaskedInput.prototype.attached = function () {
@@ -123,7 +129,7 @@ var MaskedInput = (function () {
                 return unmasked;
             }
             else {
-                return this.value;
+                return this.numberToString(this.value);
             }
         },
         enumerable: true,
@@ -131,7 +137,7 @@ var MaskedInput = (function () {
     });
     Object.defineProperty(MaskedInput.prototype, "unmaskedModelValue", {
         get: function () {
-            var val = this.value;
+            var val = this.numberToString(this.value);
             var unmasked = this.masker.unmaskValue(val);
             return unmasked;
         },
@@ -270,7 +276,25 @@ var MaskedInput = (function () {
             }
         }
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
-        this.value = valUnmasked;
+        this._setValue(valUnmasked);
+    };
+    MaskedInput.prototype._setValue = function (newValue) {
+        if (this.valueMode == ValueMode.Str && masker_1.isNumeric(newValue)) {
+            newValue = this.numberToString(newValue);
+        }
+        if (this.valueMode == ValueMode.Num && masker_1.isString(newValue)) {
+            newValue = this.stringToNumber(newValue);
+        }
+        this.value = newValue;
+    };
+    MaskedInput.prototype.numberToString = function (val) {
+        return "" + val;
+    };
+    MaskedInput.prototype.stringToNumber = function (val) {
+        if (masker_1.isNumeric(val)) {
+            return val;
+        }
+        return parseFloat(val);
     };
     MaskedInput.prototype.onFocus = function (e) {
         e = e || {};
@@ -320,7 +344,7 @@ var MaskedInput = (function () {
             return;
         }
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
-        this.value = valUnmasked;
+        this._setValue(valUnmasked);
     };
     MaskedInput.prototype.updateUIValue = function (valUnmasked, caretBumpBack, caretPos, caretPosOld) {
         var isAddition = this.isAddition();
@@ -444,11 +468,11 @@ var MaskedInput = (function () {
             caretBumpBack = caretBumpBack && strippedNew.length < strippedOld.length;
         }
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
-        this.value = valUnmasked;
+        this._setValue(valUnmasked);
     };
     __decorate([
         aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay }), 
-        __metadata('design:type', String)
+        __metadata('design:type', Object)
     ], MaskedInput.prototype, "value", void 0);
     __decorate([
         aurelia_framework_1.bindable, 
@@ -494,4 +518,9 @@ var MaskedInput = (function () {
     return MaskedInput;
 })();
 exports.MaskedInput = MaskedInput;
+var ValueMode;
+(function (ValueMode) {
+    ValueMode[ValueMode["Str"] = 1] = "Str";
+    ValueMode[ValueMode["Num"] = 2] = "Num";
+})(ValueMode || (ValueMode = {}));
 //# sourceMappingURL=masked-input.js.map

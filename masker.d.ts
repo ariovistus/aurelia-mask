@@ -23,9 +23,9 @@ export declare class Masker {
     aspnetMasking: boolean;
     placeholder: string;
     constructor(options: MaskOptions);
-    unmaskValue(value: any): string;
-    maskValue(unmaskedValue: any): string;
-    maxCaretPos(value: any): number;
+    unmaskValue(value: string): string;
+    maskValue(unmaskedValue: string): string;
+    maxCaretPos(value: string): number;
     minCaretPos(): number;
     _unmaskValue(value: any): string;
     _maskValue(unmaskedValue: string, keepMasking: boolean): string;
@@ -38,3 +38,5 @@ export declare class Masker {
     getPlaceholderChar(i: any): string;
     isValidAt(chr: string, caretPos: number): boolean;
 }
+export declare function isString(myVar: any): boolean;
+export declare function isNumeric(n: any): boolean;

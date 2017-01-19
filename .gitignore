@@ -7,5 +7,8 @@ src/*.js
 src/*.js.map
 tests/e2e/dest/*
 tests/unit/dest/*
+tests/unit/dist/*
+tests/unit/tests/*
 tests/unit/src/src/*
 sample/src/plugins/
+typings/

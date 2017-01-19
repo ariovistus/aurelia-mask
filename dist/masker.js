@@ -24,9 +24,6 @@ var maskDefinitions = {
     'A': /[a-zA-Z]/,
     '*': /[a-zA-Z0-9]/
 };
-function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
 function deleteChars(s, ch) {
     if (s == null) {
         s = "";
@@ -62,19 +59,11 @@ var Masker = (function () {
             var result = this._maskValue2(unmaskedValue);
             return result;
         }
-        else if (isNumeric(unmaskedValue)) {
-            unmaskedValue = "" + unmaskedValue;
-        }
         return this._maskValue(unmaskedValue, false);
     };
     Masker.prototype.maxCaretPos = function (value) {
         var valueLength = -1;
-        if (isString(value)) {
-            valueLength = value.length;
-        }
-        else if (isNumeric(value)) {
-            valueLength = ("" + value).length;
-        }
+        valueLength = value.length;
         if (this.aspnetMasking) {
             var caretPosMax = this.maskCaretMap.slice().pop();
             return caretPosMax;
@@ -169,7 +158,8 @@ var Masker = (function () {
         return valueMasked;
     };
     Masker.prototype._maskValue2 = function (unmaskedValue) {
-        var input = unmaskedValue || '';
+        var input;
+        input = unmaskedValue || "";
         var valueMasked = '', maskCaretMapCopy = this.maskCaretMap.slice(), maskPatternsCopy = this.maskPatterns.slice();
         maskCaretMapCopy.pop();
         var placeholder = this.placeholder;
@@ -298,4 +288,9 @@ exports.Masker = Masker;
 function isString(myVar) {
     return (typeof myVar === 'string' || myVar instanceof String);
 }
+exports.isString = isString;
+function isNumeric(n) {
+    return !isString(n) && !isNaN(parseFloat(n)) && isFinite(n);
+}
+exports.isNumeric = isNumeric;
 //# sourceMappingURL=masker.js.map

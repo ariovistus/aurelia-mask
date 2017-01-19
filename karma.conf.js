@@ -22,8 +22,9 @@ module.exports = function(config) {
 
     jspm: {
         loadFiles: [
-            'tests/unit/dest/masker.spec.js',
-            'tests/unit/dest/masked-input.spec.js'
+            'tests/unit/dest/tests/unit/src/isnumeric.spec.js',
+            'tests/unit/dest/tests/unit/src/masker.spec.js',
+            'tests/unit/dest/tests/unit/src/masked-input.spec.js'
         ],
         serveFiles: [
             '**/*.js',
@@ -38,7 +39,7 @@ module.exports = function(config) {
         '/tests': '/base/tests'
     },
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress'/*, 'coverage'*/],
 
     coverageReporter: {
         type: 'html',

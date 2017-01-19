@@ -2,7 +2,8 @@ import { Masker } from "./masker";
 export declare class MaskedInput {
     element: Element;
     inputElement: HTMLInputElement;
-    value: string;
+    value: string | number;
+    private valueMode;
     mask: string;
     inputId: string;
     inputClass: string;
@@ -41,6 +42,9 @@ export declare class MaskedInput {
     isSingleAddition(): boolean;
     isDeletion(): boolean;
     onInput(e: any): void;
+    _setValue(newValue: string | number): void;
+    numberToString(val: number | string): string;
+    stringToNumber(val: number | string): number;
     onFocus(e: any): void;
     onKeyUp(e: any): void;
     updateUIValue(valUnmasked: any, caretBumpBack: any, caretPos: any, caretPosOld: any): void;
