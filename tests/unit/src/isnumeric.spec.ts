@@ -9,8 +9,12 @@ describe("isNumeric", () => {
             result: true,
         },
         {
-            input: NaN,
+            input: 0,
             result: true,
+        },
+        {
+            input: NaN,
+            result: false,
         },
         {
             input: null,
@@ -34,10 +38,10 @@ describe("isNumeric", () => {
         },
     ];
 
-    for(var testcase of testcases) {
+    testcases.forEach(testcase => {
         it("should test " + testcase.input + " for numericality", () => {
             expect(isNumeric(testcase.input)).toBe(testcase.result);
         });
-    }
+    });
 });
 

@@ -15,7 +15,7 @@ function makeInputEvent() {
 
 function makeFocusEvent() {
     let e = document.createEvent("Event");
-    e.initEvent("focus", true, true/*, window*/);
+    (<any>(e.initEvent))("focus", true, true, window);
     return e;
 }
 
@@ -85,7 +85,9 @@ describe ("MaskedInput", () => {
 
         focusEvent = makeFocusEvent();
         maskedInput.onFocus(focusEvent);
-        expect(getCursor(inputElement)).toBe(1);
+        // i think we aren't doing this anymore, but having the entire text be selected
+        // not entirely sure
+        //expect(getCursor(inputElement)).toBe(1);
 
         inputElement.value = "(1___) ___-____";
         setCursor(inputElement, 2);
@@ -142,5 +144,110 @@ describe ("MaskedInput", () => {
         expect(inputElement.value).toBe("(12_) ___-____");
         expect(maskedInput.value).toBe("12");
         expect(getCursor(inputElement)).toBe(2);
+    });
+
+    describe("_setValue", () => {
+        let maskedInput;
+
+        function setup() {
+            initialize();
+            // type '1', '2', 'left', 'left', 'v' should result in '12'
+            let inputElement = document.createElement("input");
+            let container = new Container();
+            container.makeGlobal();
+            container.registerInstance(Element, inputElement);
+            let engine = container.get(TemplatingEngine)
+            let mask = "(999) 999-9999";
+            maskedInput = engine.createViewModelForUnitTest(MaskedInput, {
+                "mask": mask
+            });
+        }
+
+        let testcases = [
+            {
+                oldValue: null,
+                newValue: "2",
+                expectedValue: "2",
+            },
+            {
+                oldValue: "2",
+                newValue: "2",
+                expectedValue: "2",
+            },
+            {
+                oldValue: "2",
+                newValue: 2,
+                expectedValue: "2",
+            },
+            {
+                oldValue: 2,
+                newValue: "2",
+                expectedValue: 2,
+            },
+            {
+                oldValue: "",
+                newValue: 0,
+                expectedValue: 0,
+            },
+            {
+                oldValue: null,
+                newValue: 0,
+                expectedValue: 0,
+            },
+            {
+                oldValue: undefined,
+                newValue: 0,
+                expectedValue: 0,
+            },
+            {
+                oldValue: "0",
+                newValue: 0,
+                expectedValue: "0",
+            },
+            {
+                oldValue: "",
+                newValue: null,
+                expectedValue: "",
+            },
+            {
+                oldValue: "",
+                newValue: undefined,
+                expectedValue: "",
+            },
+            {
+                oldValue: null,
+                newValue: "",
+                expectedValue: null,
+            },
+            {
+                oldValue: null,
+                newValue: undefined,
+                expectedValue: null,
+            },
+            {
+                oldValue: undefined,
+                newValue: "",
+                expectedValue: undefined,
+            },
+            {
+                oldValue: undefined,
+                newValue: null,
+                expectedValue: undefined,
+            },
+            {
+                oldValue: 0,
+                newValue: null,
+                expectedValue: null,
+            },
+        ];
+
+        testcases.forEach(testcase => {
+            it("should set value to " + testcase.expectedValue + " on transition "  + testcase.oldValue + " to " + testcase.newValue, () => {
+                setup();
+                maskedInput.value = testcase.oldValue;
+                maskedInput._setValue(testcase.newValue);
+                expect(maskedInput.value).toBe(testcase.expectedValue);
+            });
+        });
     });
 });

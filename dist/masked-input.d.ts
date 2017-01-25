@@ -3,7 +3,6 @@ export declare class MaskedInput {
     element: Element;
     inputElement: HTMLInputElement;
     value: string | number;
-    private valueMode;
     mask: string;
     inputId: string;
     inputClass: string;

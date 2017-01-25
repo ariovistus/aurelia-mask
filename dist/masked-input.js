@@ -31,12 +31,6 @@ var MaskedInput = (function () {
     }
     MaskedInput.prototype.bind = function () {
         this.maskChanged();
-        if (masker_1.isNumeric(this.value)) {
-            this.valueMode = ValueMode.Num;
-        }
-        else {
-            this.valueMode = ValueMode.Str;
-        }
         this.oldValue = this.masker.maskValue(this.numberToString(this.value));
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     };
@@ -279,13 +273,13 @@ var MaskedInput = (function () {
         this._setValue(valUnmasked);
     };
     MaskedInput.prototype._setValue = function (newValue) {
-        if (this.valueMode == ValueMode.Str && masker_1.isNumeric(newValue)) {
-            newValue = this.numberToString(newValue);
+        if (masker_1.isNumeric(newValue) && masker_1.isString(this.value) && this.numberToString(newValue) === this.value) {
+            return;
         }
-        if (this.valueMode == ValueMode.Num && masker_1.isString(newValue)) {
-            newValue = this.stringToNumber(newValue);
+        if (masker_1.isNumeric(this.value) && masker_1.isString(newValue) && this.numberToString(this.value) === newValue) {
+            return;
         }
-        if (this.valueMode == ValueMode.Str && !this.value && !newValue) {
+        if (!this.value && this.value !== 0 && !newValue && newValue !== 0) {
             return;
         }
         this.value = newValue;
@@ -523,9 +517,4 @@ var MaskedInput = (function () {
     return MaskedInput;
 })();
 exports.MaskedInput = MaskedInput;
-var ValueMode;
-(function (ValueMode) {
-    ValueMode[ValueMode["Str"] = 1] = "Str";
-    ValueMode[ValueMode["Num"] = 2] = "Num";
-})(ValueMode || (ValueMode = {}));
 //# sourceMappingURL=masked-input.js.map

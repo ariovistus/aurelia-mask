@@ -15,7 +15,6 @@ export class MaskedInput {
     element: Element;
     inputElement: HTMLInputElement;
     @bindable({ defaultBindingMode: bindingMode.twoWay }) value: string|number;
-    private valueMode: ValueMode ;
     @bindable mask: string;
     @bindable inputId: string;
     @bindable inputClass: string;
@@ -60,14 +59,6 @@ export class MaskedInput {
 
     bind() {
         this.maskChanged();
-
-        // hopefully, value is straight from user model at this point
-        if(isNumeric(this.value)) {
-            this.valueMode = ValueMode.Num;
-        } else {
-            this.valueMode = ValueMode.Str;
-        }
-
         this.oldValue = this.masker.maskValue(this.numberToString(this.value));
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     }
@@ -336,15 +327,18 @@ export class MaskedInput {
     }
 
     _setValue(newValue: string|number) {
-        if(this.valueMode == ValueMode.Str && isNumeric(newValue)) {
-            newValue = this.numberToString(newValue);
-        }
-        if(this.valueMode == ValueMode.Num && isString(newValue)) {
-            newValue = this.stringToNumber(newValue);
-        }
-        if(this.valueMode == ValueMode.Str && !this.value && !newValue) {
+        if(isNumeric(newValue) && isString(this.value) && this.numberToString(newValue) === this.value)  {
             return;
         }
+        
+        if(isNumeric(this.value) && isString(newValue) && this.numberToString(this.value) === newValue)  {
+            return;
+        }
+
+        if(!this.value && this.value !== 0 && !newValue && newValue !== 0) {
+            return;
+        }
+
         this.value = newValue;
     }
 
@@ -609,9 +603,3 @@ export class MaskedInput {
         this._setValue(valUnmasked);
     }
 }
-
-enum ValueMode {
-    Str = 1,
-    Num = 2
-}
-

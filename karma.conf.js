@@ -22,9 +22,9 @@ module.exports = function(config) {
 
     jspm: {
         loadFiles: [
-            'tests/unit/dest/tests/unit/src/isnumeric.spec.js',
-            'tests/unit/dest/tests/unit/src/masker.spec.js',
-            'tests/unit/dest/tests/unit/src/masked-input.spec.js'
+            'tests/unit/tests/unit/src/isnumeric.spec.js',
+            'tests/unit/tests/unit/src/masker.spec.js',
+            'tests/unit/tests/unit/src/masked-input.spec.js'
         ],
         serveFiles: [
             '**/*.js',
