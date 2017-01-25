@@ -342,6 +342,9 @@ export class MaskedInput {
         if(this.valueMode == ValueMode.Num && isString(newValue)) {
             newValue = this.stringToNumber(newValue);
         }
+        if(this.valueMode == ValueMode.Str && !this.value && !newValue) {
+            return;
+        }
         this.value = newValue;
     }
 
@@ -350,6 +353,7 @@ export class MaskedInput {
     // bad things happen if x != numberToString(stringToNumber(x))
     numberToString(val: number|string): string {
         // todo: allow user to customize 
+        if(val == null) val = "";
         return ""+val;
     }
 

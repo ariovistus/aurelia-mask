@@ -285,9 +285,14 @@ var MaskedInput = (function () {
         if (this.valueMode == ValueMode.Num && masker_1.isString(newValue)) {
             newValue = this.stringToNumber(newValue);
         }
+        if (this.valueMode == ValueMode.Str && !this.value && !newValue) {
+            return;
+        }
         this.value = newValue;
     };
     MaskedInput.prototype.numberToString = function (val) {
+        if (val == null)
+            val = "";
         return "" + val;
     };
     MaskedInput.prototype.stringToNumber = function (val) {

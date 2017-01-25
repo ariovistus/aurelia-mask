@@ -771,7 +771,7 @@ describe("masked input", () => {
             expect(browser.driver.switchTo().activeElement().getAttribute("id")).toBe("input6");
 
             browser.actions()
-                .mouseMove(input6, {x: 100, y: 20})
+                .mouseMove(<any>input6, {x: 100, y: 20})
                 .click()
                 .perform();
             expect(getCursor(input6)).toBe(12);
@@ -793,7 +793,7 @@ describe("masked input", () => {
             input7.click();
 
             browser.actions()
-                .mouseMove(input7, {x: 22, y: 20})
+                .mouseMove(<any>input7, {x: 22, y: 20})
                 .click()
                 .perform();
             expect(getCursor(input7)).toBe(2);
