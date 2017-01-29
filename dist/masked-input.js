@@ -282,6 +282,9 @@ var MaskedInput = (function () {
         if (!this.value && this.value !== 0 && !newValue && newValue !== 0) {
             return;
         }
+        if (this.change != null && newValue !== this.value) {
+            this.change({ newValue: newValue, oldValue: this.value });
+        }
         this.value = newValue;
     };
     MaskedInput.prototype.numberToString = function (val) {
@@ -509,6 +512,10 @@ var MaskedInput = (function () {
         aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: null }), 
         __metadata('design:type', Function)
     ], MaskedInput.prototype, "findInput", void 0);
+    __decorate([
+        aurelia_framework_1.bindable(), 
+        __metadata('design:type', Function)
+    ], MaskedInput.prototype, "change", void 0);
     MaskedInput = __decorate([
         aurelia_framework_1.customAttribute('masked'),
         aurelia_framework_1.inject(Element), 

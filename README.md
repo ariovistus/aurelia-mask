@@ -151,4 +151,15 @@ by default it is insert. You can also specify overtype mode.
 
 Currently only works with aspnet mode.
 
+### change event
+
+you can specify a callback on change:
+
+```html
+<input masked="value.bind: myvalue; mask: 9; change.call: onChange()" />
+```
+
+- don't use change.trigger on the input
+- don't use BindingEngine on myvalue
+
 [ui-mask]: https://github.com/angular-ui/ui-mask

@@ -1,17 +1,10 @@
-import {inject} from "aurelia-framework";
-import {BindingEngine} from "aurelia-binding";
-
-@inject(BindingEngine)
 export class App {
   mask = '(999) (999) **999';
   mask2 = '**/***/****'; 
   mask3 = "(999) 999-9999";
   findSecondInput = _findSecondInput;
 
-  constructor(bindingEngine) {
-    bindingEngine.propertyObserver(this, "value11").subscribe(() => {
-        this.onChange11();
-    });
+  constructor() {
   }
 
   update(i) {
@@ -19,12 +12,10 @@ export class App {
   }
 
 
-  onChange11() {
-    this.value11_r = "nachos: " + this.value11;
+  onChange11(newValue, oldValue) {
+    this.value11_r = "nachos: " + newValue;
   }
-  onChange11_1() {
-    this.value11_1_r = "nachos: " + this.value11_1;
-  }
+
 }
 
 function _findSecondInput(elt) {

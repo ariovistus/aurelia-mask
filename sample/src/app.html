@@ -97,18 +97,10 @@
             <tr>
                 <td> change event </td>
                 <td >
-                    <input id='input11' value.bind="value11" masked="value.bind: value11; mask.bind: mask3;" />
+                    <input id='input11' masked="value.bind: value11; mask.bind: mask3; change.call: onChange11(newValue, oldValue)" />
                 </td>
                 <td id='display11'> ${value11_r} </td>
                 <td> <button id='update11' click.trigger="update(11)">Update</button> </td>
-            </tr>
-            <tr>
-                <td> change event (no mask) </td>
-                <td>
-                    <input id='input11_1' value.bind='value11_1' change.trigger="onChange11_1()"/>
-                </td>
-                <td id='display11_1'> ${value11_1_r} </td>
-                <td> <button id='update11_1'>Update</button> </td>
             </tr>
         </tbody>
     </table>

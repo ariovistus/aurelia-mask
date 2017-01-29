@@ -12,6 +12,7 @@ export declare class MaskedInput {
     placeholder: string;
     editMode: string;
     findInput: (Element) => HTMLInputElement;
+    change: Function;
     masker: Masker;
     preventBackspace: boolean;
     oldValue: string;

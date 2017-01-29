@@ -26,6 +26,7 @@ export class MaskedInput {
 
     @bindable({ defaultBindingMode: bindingMode.oneTime, defaultValue: null}) 
         findInput: (Element) => HTMLInputElement;
+    @bindable() change: Function;
 
     masker: Masker;
     preventBackspace: boolean;
@@ -339,6 +340,9 @@ export class MaskedInput {
             return;
         }
 
+        if (this.change != null && newValue !== this.value) {
+            this.change({newValue: newValue, oldValue: this.value});
+        }
         this.value = newValue;
     }
 
