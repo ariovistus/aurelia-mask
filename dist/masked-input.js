@@ -30,6 +30,9 @@ var MaskedInput = (function () {
         this.selectHandler = function (e) { return _this.onSelect(e); };
     }
     MaskedInput.prototype.bind = function () {
+        if (this.mask == null) {
+            throw new Error("mask needs to be defined");
+        }
         this.maskChanged();
         this.oldValue = this.masker.maskValue(this.numberToString(this.value));
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
