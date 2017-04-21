@@ -38,6 +38,7 @@ export declare class MaskedInput {
     onClick(e: any): void;
     unmaskedUIValue: string;
     unmaskedModelValue: string;
+    private getUnmaskedValue(_val);
     isAddition(doterriblethings?: boolean): boolean;
     isSingleAddition(): boolean;
     isDeletion(): boolean;

@@ -131,13 +131,16 @@ var MaskedInput = (function () {
     });
     Object.defineProperty(MaskedInput.prototype, "unmaskedModelValue", {
         get: function () {
-            var val = this.numberToString(this.value);
-            var unmasked = this.masker.unmaskValue(val);
-            return unmasked;
+            return this.getUnmaskedValue(this.value);
         },
         enumerable: true,
         configurable: true
     });
+    MaskedInput.prototype.getUnmaskedValue = function (_val) {
+        var val = this.numberToString(_val);
+        var unmasked = this.masker.unmaskValue(val);
+        return unmasked;
+    };
     MaskedInput.prototype.isAddition = function (doterriblethings) {
         if (doterriblethings === void 0) { doterriblethings = false; }
         var val = this.unmaskedUIValue;
@@ -456,7 +459,7 @@ var MaskedInput = (function () {
         });
     };
     MaskedInput.prototype.valueChanged = function (newv, oldv) {
-        var valUnmasked = this.unmaskedModelValue;
+        var valUnmasked = this.getUnmaskedValue(newv);
         var caretPos = this.getCaretPosition() || 0;
         var caretPosOld = this.oldCaretPosition || 0;
         var caretPosDelta = caretPos - caretPosOld;

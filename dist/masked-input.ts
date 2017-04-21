@@ -162,7 +162,11 @@ export class MaskedInput {
     }
 
     get unmaskedModelValue(): string {
-        let val = this.numberToString(this.value);
+        return this.getUnmaskedValue(this.value);
+    }
+
+    private getUnmaskedValue(_val): string {
+        let val = this.numberToString(_val);
         let unmasked = this.masker.unmaskValue(val);
         return unmasked;
     }
@@ -582,7 +586,8 @@ export class MaskedInput {
     }
 
     valueChanged(newv, oldv) {
-        let valUnmasked = this.unmaskedModelValue;
+        // apparently, the assumption that newv === this.value doesn't hold
+        let valUnmasked = this.getUnmaskedValue(newv);
         let caretPos = this.getCaretPosition() || 0;
         let caretPosOld = this.oldCaretPosition || 0;
         let caretPosDelta = caretPos - caretPosOld;
