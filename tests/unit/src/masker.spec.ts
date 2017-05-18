@@ -232,3 +232,16 @@ describe("Masker", () => {
     });
 });
 
+describe("Maskless Masker", () => {
+    it("should not modify values", () => {
+        let masker = getMasker({maskFormat: undefined, bindMasking: false, placeholder: null, aspnetMasking: true});
+
+        let result = masker.maskValue("888");
+
+        expect(result).toBe("888");
+
+        let result2 = masker.unmaskValue("888");
+
+        expect(result2).toBe("888");
+    });
+});
