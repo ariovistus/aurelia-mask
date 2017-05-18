@@ -1,10 +1,10 @@
 language: node_js
 node_js: 
     - "4"
-addons:
-    sauce_connect:
-        username: "aurelia-mask"
-        access_key: 
-            secure: "daF/wUbscwgMdGpD8Qih/cJtt3Fqau5/kFdpXBI0LUlL9cXAjgaVl2lsJe7bNa67lgRglSJ5yRlkG/Inx/ck6JC6kzMLrO1iijb24x3cP9s1kMxPiia9PyNXcG9BijayF0PGydkJPi2HvTkoBJh4hWTfOmIKo7/X+dgeNDxM1EYd2NnNX6cX29ylJhykj5IM3COVCMH7HJGEC3dQEAbsU5VAzkK07ya709vS0u3rW7KakzE77ROI7qOUZPTVHWnfxPU3gBEAix95jKvNu99us3osawl+vA/d191z/VDnaFVdzy0izNsOW2eOs0luH0ow2HmKAU1OE48H/Ll6nHPBo8HO/q2Yf9evDn8HsehxdEoDm+3SPaTx+twTaLOS7rSSFBOZzQCF0KlBgrrdtxeS0UoRjUdKx5mcZysNj/BcPgjDPvGylvXrBG4eVWDRpLnWl1I9Svib0vwT4QXFrvq3CQSAMaRVf+4tv3dIfBkAM/q0A7nRIXmeczJXgK5RyJGY6j3UxAXxQxKC6T0hT3wvYc4ET8DmadEtNOpTTATe9uneWd2ExcE1rpKXh6L7JgAYmEDKldLuEsxUVpQM766sz2edDp3e1JlT8JyAk6SwUr+Ys9YVzCxfl0be5LCmJ7z0u8cPxOIMgwFM/tGNgog/PUTFKklWPNHZTogn8P1bPqk="
+#addons:
+    #    sauce_connect:
+    #    username: "aurelia-mask"
+    #    access_key: 
+    #        secure: "daF/wUbscwgMdGpD8Qih/cJtt3Fqau5/kFdpXBI0LUlL9cXAjgaVl2lsJe7bNa67lgRglSJ5yRlkG/Inx/ck6JC6kzMLrO1iijb24x3cP9s1kMxPiia9PyNXcG9BijayF0PGydkJPi2HvTkoBJh4hWTfOmIKo7/X+dgeNDxM1EYd2NnNX6cX29ylJhykj5IM3COVCMH7HJGEC3dQEAbsU5VAzkK07ya709vS0u3rW7KakzE77ROI7qOUZPTVHWnfxPU3gBEAix95jKvNu99us3osawl+vA/d191z/VDnaFVdzy0izNsOW2eOs0luH0ow2HmKAU1OE48H/Ll6nHPBo8HO/q2Yf9evDn8HsehxdEoDm+3SPaTx+twTaLOS7rSSFBOZzQCF0KlBgrrdtxeS0UoRjUdKx5mcZysNj/BcPgjDPvGylvXrBG4eVWDRpLnWl1I9Svib0vwT4QXFrvq3CQSAMaRVf+4tv3dIfBkAM/q0A7nRIXmeczJXgK5RyJGY6j3UxAXxQxKC6T0hT3wvYc4ET8DmadEtNOpTTATe9uneWd2ExcE1rpKXh6L7JgAYmEDKldLuEsxUVpQM766sz2edDp3e1JlT8JyAk6SwUr+Ys9YVzCxfl0be5LCmJ7z0u8cPxOIMgwFM/tGNgog/PUTFKklWPNHZTogn8P1bPqk="
 
-script: bash runtests.sh
+# script: bash runtests.sh

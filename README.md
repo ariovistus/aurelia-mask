@@ -1,5 +1,3 @@
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/aurelia-mask.svg)](https://saucelabs.com/u/aurelia-mask)
-
 This is a port of Angular's [UI-Mask][ui-mask] to Aurelia.
 
 Apply a mask on an input field so the user can only type pre-determined pattern.
