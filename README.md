@@ -67,7 +67,7 @@ notes
 - mask has the same format as default ui-mask
   - 9 → number
   - a → alpha
-  - * → number or alpha
+  - \* → number or alpha
 
 
 ## Options
