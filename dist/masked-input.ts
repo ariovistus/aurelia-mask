@@ -560,9 +560,9 @@ export class MaskedInput {
                 this.inputElement.setSelectionRange(pos, pos);
             }
         }
-        else if (this.inputElement.createTextRange) {
+        else if ((<any>this.inputElement).createTextRange) {
             // Curse you IE
-            var range = this.inputElement.createTextRange();
+            var range = (<any>this.inputElement).createTextRange();
             range.collapse(true);
             range.moveEnd('character', pos);
             range.moveStart('character', pos);
