@@ -12,3 +12,4 @@ tests/unit/tests/*
 tests/unit/src/src/*
 sample/src/plugins/
 typings/
+*.tgz

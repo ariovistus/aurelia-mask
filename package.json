@@ -41,5 +41,8 @@
     "protractor": "^3.2.2",
     "tsconfig-glob": "^0.4.3",
     "typescript": "~1.7.5"
+  },
+  "dependencies": {
+    "aurelia-framework": "^1.0.0"
   }
 }

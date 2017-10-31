@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var aurelia_framework_1 = require('aurelia-framework');
+Object.defineProperty(exports, "__esModule", { value: true });
+var aurelia_framework_1 = require("aurelia-framework");
 var masker_1 = require("./masker");
 function findFirstInputElement(elt) {
     var elts = elt.getElementsByTagName("input");
@@ -478,56 +480,56 @@ var MaskedInput = (function () {
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this._setValue(valUnmasked);
     };
-    __decorate([
-        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay }), 
-        __metadata('design:type', Object)
-    ], MaskedInput.prototype, "value", void 0);
-    __decorate([
-        aurelia_framework_1.bindable, 
-        __metadata('design:type', String)
-    ], MaskedInput.prototype, "mask", void 0);
-    __decorate([
-        aurelia_framework_1.bindable, 
-        __metadata('design:type', String)
-    ], MaskedInput.prototype, "inputId", void 0);
-    __decorate([
-        aurelia_framework_1.bindable, 
-        __metadata('design:type', String)
-    ], MaskedInput.prototype, "inputClass", void 0);
-    __decorate([
-        aurelia_framework_1.bindable, 
-        __metadata('design:type', Boolean)
-    ], MaskedInput.prototype, "disabled", void 0);
-    __decorate([
-        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: false }), 
-        __metadata('design:type', Boolean)
-    ], MaskedInput.prototype, "bindMasking", void 0);
-    __decorate([
-        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: false }), 
-        __metadata('design:type', Boolean)
-    ], MaskedInput.prototype, "aspnetMasking", void 0);
-    __decorate([
-        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: null }), 
-        __metadata('design:type', String)
-    ], MaskedInput.prototype, "placeholder", void 0);
-    __decorate([
-        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: "insert" }), 
-        __metadata('design:type', String)
-    ], MaskedInput.prototype, "editMode", void 0);
-    __decorate([
-        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: null }), 
-        __metadata('design:type', Function)
-    ], MaskedInput.prototype, "findInput", void 0);
-    __decorate([
-        aurelia_framework_1.bindable(), 
-        __metadata('design:type', Function)
-    ], MaskedInput.prototype, "change", void 0);
-    MaskedInput = __decorate([
-        aurelia_framework_1.customAttribute('masked'),
-        aurelia_framework_1.inject(Element), 
-        __metadata('design:paramtypes', [Element])
-    ], MaskedInput);
     return MaskedInput;
-})();
+}());
+__decorate([
+    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay }),
+    __metadata("design:type", Object)
+], MaskedInput.prototype, "value", void 0);
+__decorate([
+    aurelia_framework_1.bindable,
+    __metadata("design:type", String)
+], MaskedInput.prototype, "mask", void 0);
+__decorate([
+    aurelia_framework_1.bindable,
+    __metadata("design:type", String)
+], MaskedInput.prototype, "inputId", void 0);
+__decorate([
+    aurelia_framework_1.bindable,
+    __metadata("design:type", String)
+], MaskedInput.prototype, "inputClass", void 0);
+__decorate([
+    aurelia_framework_1.bindable,
+    __metadata("design:type", Boolean)
+], MaskedInput.prototype, "disabled", void 0);
+__decorate([
+    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: false }),
+    __metadata("design:type", Boolean)
+], MaskedInput.prototype, "bindMasking", void 0);
+__decorate([
+    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: false }),
+    __metadata("design:type", Boolean)
+], MaskedInput.prototype, "aspnetMasking", void 0);
+__decorate([
+    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: null }),
+    __metadata("design:type", String)
+], MaskedInput.prototype, "placeholder", void 0);
+__decorate([
+    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: "insert" }),
+    __metadata("design:type", String)
+], MaskedInput.prototype, "editMode", void 0);
+__decorate([
+    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.oneTime, defaultValue: null }),
+    __metadata("design:type", Function)
+], MaskedInput.prototype, "findInput", void 0);
+__decorate([
+    aurelia_framework_1.bindable(),
+    __metadata("design:type", Function)
+], MaskedInput.prototype, "change", void 0);
+MaskedInput = __decorate([
+    aurelia_framework_1.customAttribute('masked'),
+    aurelia_framework_1.inject(Element),
+    __metadata("design:paramtypes", [Element])
+], MaskedInput);
 exports.MaskedInput = MaskedInput;
 //# sourceMappingURL=masked-input.js.map

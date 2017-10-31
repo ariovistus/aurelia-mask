@@ -1,6 +1,10 @@
+build_npm.sh
 coverage/
 jspm_packages/
-sample/
+cli-sample/
+jspm-sample/
+typings_custom/
+webpack-sample/
 src/
 tests/
 typings/
@@ -10,6 +14,7 @@ runtests.sh
 karma.conf.js
 Makefile
 config.js
+*.tgz
 *.ps1
 .travis.yml
 tsconfig.json

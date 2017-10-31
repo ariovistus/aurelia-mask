@@ -1,0 +1,7 @@
+input[masked] {
+    font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+}
+
+td ~ td ~ td {
+    min-width: 200px;
+}

@@ -32,12 +32,12 @@ export declare class MaskedInput {
     attached(): void;
     findInputElement(): void;
     detached(): void;
-    maxCaretPos: number;
-    minCaretPos: number;
+    readonly maxCaretPos: number;
+    readonly minCaretPos: number;
     onSelect(e: any): void;
     onClick(e: any): void;
-    unmaskedUIValue: string;
-    unmaskedModelValue: string;
+    readonly unmaskedUIValue: string;
+    readonly unmaskedModelValue: string;
     private getUnmaskedValue(_val);
     isAddition(doterriblethings?: boolean): boolean;
     isSingleAddition(): boolean;
