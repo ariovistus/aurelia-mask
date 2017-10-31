@@ -40,7 +40,7 @@ aurelia.use
     ...
 ```
 
-If you have 1.2 or later you can just reference the package:
+If you have 1.2 or later (and aren't using webpack) you can just reference the package:
 
 ```html
 <require from="aurelia-mask"></require>
