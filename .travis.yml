@@ -8,6 +8,7 @@ script:
 - bash build_npm.sh
 deploy:
   provider: npm
+  skip_clean: true
   email: ellery-newcomer@utulsa.edu
   on: 
     tags: true

@@ -347,10 +347,13 @@ export class MaskedInput {
             return;
         }
 
-        if (this.change != null && newValue !== this.value) {
-            this.change({newValue: newValue, oldValue: this.value});
-        }
-        this.value = newValue;
+        // this seems to avoid infinite loops caused by observers that think the old value is the right one
+        setTimeout(() => {
+            if (this.change != null && newValue !== this.value) {
+                this.change({newValue: newValue, oldValue: this.value});
+            }
+            this.value = newValue;
+        }, 1);
     }
 
 

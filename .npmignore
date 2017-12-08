@@ -1,4 +1,4 @@
-build_npm.sh
+*.sh
 coverage/
 jspm_packages/
 cli-sample/
@@ -18,3 +18,5 @@ config.js
 *.ps1
 .travis.yml
 tsconfig.json
+versionchecker.py
+yarn.lock

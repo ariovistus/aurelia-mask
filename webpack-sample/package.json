@@ -10,7 +10,6 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrapper": "^2.1.1",
-    "aurelia-mask": "./aurelia-mask-v1.4.3.tgz",
     "aurelia-polyfills": "latest",
     "bluebird": "^3.4.1"
   },

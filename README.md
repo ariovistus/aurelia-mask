@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/aurelia-mask.svg)](http://badge.fury.io/js/aurelia-mask)
+
 This is a port of Angular's [UI-Mask][ui-mask] to Aurelia.
 
 Apply a mask on an input field so the user can only type pre-determined pattern.
