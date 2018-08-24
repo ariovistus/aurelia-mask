@@ -1,5 +1,5 @@
 {
-  "name": "data",
+  "name": "webpack-sample",
   "type": "project:application",
   "bundler": {
     "id": "webpack",
@@ -13,12 +13,12 @@
     }
   },
   "platform": {
-    "id": "web",
-    "displayName": "Web",
-    "port": 9000,
+    "id": "aspnetcore",
+    "displayName": "ASP.NET Core",
+    "port": 8080,
     "hmr": false,
     "open": false,
-    "output": "dist"
+    "output": "wwwroot/dist"
   },
   "loader": {
     "id": "none",
@@ -40,8 +40,8 @@
     "fileExtension": ".scss"
   },
   "editor": {
-    "id": "none",
-    "displayName": "None"
+    "id": "vscode",
+    "displayName": "Visual Studio Code"
   },
   "unitTestRunner": [
     {
@@ -50,8 +50,8 @@
     }
   ],
   "integrationTestRunner": {
-    "id": "protractor",
-    "displayName": "Protractor"
+    "id": "none",
+    "displayName": "None"
   },
   "paths": {
     "root": "src",

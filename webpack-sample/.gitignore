@@ -25,4 +25,5 @@ node_modules
 
 # Compiled files
 scripts
-dist/
+obj
+wwwroot

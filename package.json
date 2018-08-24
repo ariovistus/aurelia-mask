@@ -1,6 +1,6 @@
 {
   "name": "aurelia-mask",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "license": "MIT",
   "typings": "./dist/index.d.ts",
   "repository": {
@@ -27,7 +27,7 @@
       "es6-shim": "github:es-shims/es6-shim@^0.35.0",
       "jquery": "npm:jquery@^2.2.2",
       "protractor": "npm:protractor@^3.2.2",
-      "typescript": "npm:typescript@^1.7.5"
+      "typescript": "npm:typescript@^2.3.4"
     }
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "karma-typescript-preprocessor": "0.0.21",
     "protractor": "^3.2.2",
     "tsconfig-glob": "^0.4.3",
-    "typescript": "~1.7.5"
+    "typescript": "~2.3.4"
   },
   "dependencies": {
     "aurelia-framework": "^1.0.0"
