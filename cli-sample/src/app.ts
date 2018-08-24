@@ -8,8 +8,8 @@ export class App {
   constructor() {
   }
 
-  update(i) {
-      this['value'+i] = "123456AB789";
+  update(masker) {
+        masker.setValue("123456AB789");
   }
 
 

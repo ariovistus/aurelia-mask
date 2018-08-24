@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":";;AAAA,mBAA0B,OAAO,EAAE,MAAM;AACzC,CAAC;AADD,8BACC","sourcesContent":["export function configure(aurelia, config) {\n}\n"]}

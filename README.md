@@ -71,6 +71,18 @@ notes
   - a → alpha
   - \* → number or alpha
 
+## Two way binding
+Seamless two way binding causes issues. If you need to change the model value from code, you can do the following:
+
+```html
+    <input masked="..." masked.ref="masker" />
+```
+
+and in your view model
+
+```js
+    this.masker.setValue(myvalue);
+```
 
 ## Options
 

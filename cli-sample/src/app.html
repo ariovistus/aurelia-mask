@@ -16,91 +16,91 @@
             <tr>
                 <td> simple: </td>
                 <td>
-                    <input id='input1' masked="value.bind: value1; mask.bind: mask;"/>
+                    <input id='input1' masked="value.bind: value1; mask.bind: mask;" masked.ref="masker1"/>
                 </td>
                 <td> ${value1} </td>
-                <td> <button id='update1' click.trigger="update(1)">Update</button> </td>
+                <td> <button id='update1' click.trigger="update(masker1)">Update</button> </td>
             </tr>
             <tr>
                 <td> bind masking: </td>
                 <td>
-                    <input id='input2' masked="value.bind: value2; mask.bind: mask; bind-masking: true;"/>
+                    <input id='input2' masked="value.bind: value2; mask.bind: mask; bind-masking: true;" masked.ref="masker2"/>
                 </td>
                 <td> ${value2} </td>
-                <td> <button id='update2' click.trigger="update(2)">Update</button> </td>
+                <td> <button id='update2' click.trigger="update(masker2)">Update</button> </td>
             </tr>
             <tr>
                 <td> custom placeholder: </td>
                 <td>
-                    <input id='input3' masked="value.bind: value3; mask.bind: mask; placeholder: *;"/>
+                    <input id='input3' masked="value.bind: value3; mask.bind: mask; placeholder: *;" masked.ref="masker3"/>
                 </td>
                 <td> ${value3} </td>
-                <td> <button id='update3' click.trigger="update(3)">Update</button> </td>
+                <td> <button id='update3' click.trigger="update(masker3)">Update</button> </td>
             </tr>
             <tr>
                 <td> (space) placeholder: </td>
                 <td>
-                    <input id='input4' masked="value.bind: value4; mask.bind: mask; placeholder: space;"/>
+                    <input id='input4' masked="value.bind: value4; mask.bind: mask; placeholder: space;" masked.ref="masker4"/>
                 </td>
                 <td> ${value4} </td>
-                <td> <button id='update4' click.trigger="update(4)">Update</button> </td>
+                <td> <button id='update4' click.trigger="update(masker4)">Update</button> </td>
             </tr>
             <tr>
                 <td> overtype mode: </td>
                 <td>
-                    <input id='input5' masked="value.bind: value5; mask.bind: mask; edit-mode: overtype"/>
+                    <input id='input5' masked="value.bind: value5; mask.bind: mask; edit-mode: overtype" masked.ref="masker5"/>
                 </td>
                 <td> ${value5} </td>
-                <td> <button id='update5' click.trigger="update(5)">Update</button> </td>
+                <td> <button id='update5' click.trigger="update(masker5)">Update</button> </td>
             </tr>
             <tr>
                 <td title="don't really know what to call this, but I've seen it in asp.net controls"> aspnet style: </td>
                 <td>
-                    <input id='input6' masked="value.bind: value6; mask.bind: mask; aspnet-masking: true; edit-mode: overtype"/>
+                    <input id='input6' masked="value.bind: value6; mask.bind: mask; aspnet-masking: true; edit-mode: overtype" masked.ref="masker6"/>
                 </td>
                 <td> ${value6} </td>
-                <td> <button id='update6' click.trigger="update(6)">Update</button> </td>
+                <td> <button id='update6' click.trigger="update(masker6)">Update</button> </td>
             </tr>
             <tr>
                 <td title="don't really know what to call this, but I've seen it in asp.net controls"> aspnet style: </td>
                 <td>
-                    <input id='input7' masked="value.bind: value7; mask.bind: mask2; aspnet-masking: true; edit-mode: overtype"/>
+                    <input id='input7' masked="value.bind: value7; mask.bind: mask2; aspnet-masking: true; edit-mode: overtype" masked.ref="masker7"/>
                 </td>
                 <td> ${value7} </td>
-                <td> <button id='update7' click.trigger="update(7)">Update</button> </td>
+                <td> <button id='update7' click.trigger="update(masker7)">Update</button> </td>
             </tr>
             <tr>
                 <td title='e.g. on a shadow dom element'> on non-input elements </td>
-                <td masked="value.bind: value8; mask.bind: mask;">
+                <td masked="value.bind: value8; mask.bind: mask;" masked.ref="masker8">
                     <input id='input8'/>
                 </td>
                 <td> ${value8} </td>
-                <td> <button id='update8' click.trigger="update(8)">Update</button> </td>
+                <td> <button id='update8' click.trigger="update(masker8)">Update</button> </td>
             </tr>
             <tr>
                 <td title='e.g. on a really weird shadow dom element'> on non-input elements <br/>with custom find</td>
-                <td masked="value.bind: value9; mask.bind: mask; find-input.bind: findSecondInput">
+                <td masked="value.bind: value9; mask.bind: mask; find-input.bind: findSecondInput" masked.ref="masker9">
                     <input id='not_input9' style="display:none" />
                     <input id='input9'/>
                 </td>
                 <td id='display9'> ${value9} </td>
-                <td> <button id='update9' click.trigger="update(9)">Update</button> </td>
+                <td> <button id='update9' click.trigger="update(masker9)">Update</button> </td>
             </tr>
             <tr>
                 <td> phone number </td>
-                <td masked="value.bind: value10; mask.bind: mask3;">
+                <td masked="value.bind: value10; mask.bind: mask3;" masked.ref="masker10">
                     <input id='input10'/>
                 </td>
                 <td id='display10'> ${value10} </td>
-                <td> <button id='update10' click.trigger="update(10)">Update</button> </td>
+                <td> <button id='update10' click.trigger="update(masker10)">Update</button> </td>
             </tr>
             <tr>
                 <td> change event </td>
                 <td >
-                    <input id='input11' masked="value.bind: value11; mask.bind: mask3; change.call: onChange11(newValue, oldValue)" />
+                    <input id='input11' masked="value.bind: value11; mask.bind: mask3; change.call: onChange11(newValue, oldValue)" masked.ref="masker11"/>
                 </td>
                 <td id='display11'> ${value11_r} </td>
-                <td> <button id='update11' click.trigger="update(11)">Update</button> </td>
+                <td> <button id='update11' click.trigger="update(masker11)">Update</button> </td>
             </tr>
             <!--
             <tr>

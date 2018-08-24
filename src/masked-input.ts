@@ -347,13 +347,10 @@ export class MaskedInput {
             return;
         }
 
-        // this seems to avoid infinite loops caused by observers that think the old value is the right one
-        setTimeout(() => {
-            if (this.change != null && newValue !== this.value) {
-                this.change({newValue: newValue, oldValue: this.value});
-            }
-            this.value = newValue;
-        }, 1);
+        if (this.change != null && newValue !== this.value) {
+            this.change({newValue: newValue, oldValue: this.value});
+        }
+        this.value = newValue;
     }
 
 
@@ -591,9 +588,8 @@ export class MaskedInput {
         });
     }
 
-    valueChanged(newv, oldv) {
-        // apparently, the assumption that newv === this.value doesn't hold
-        let valUnmasked = this.getUnmaskedValue(newv);
+    setValue(newValue) {
+        let valUnmasked = this.getUnmaskedValue(newValue);
         let caretPos = this.getCaretPosition() || 0;
         let caretPosOld = this.oldCaretPosition || 0;
         let caretPosDelta = caretPos - caretPosOld;
@@ -610,11 +606,12 @@ export class MaskedInput {
 
         // Update values
         if(this.editMode === "overtype") {
-            let strippedOld = this.masker.stripPlaceholders(oldv);
-            let strippedNew = this.masker.stripPlaceholders(newv);
+            let strippedOld = this.masker.stripPlaceholders(this.value);
+            let strippedNew = this.masker.stripPlaceholders(newValue);
             caretBumpBack = caretBumpBack && strippedNew.length < strippedOld.length;
         }
         this.updateUIValue(valUnmasked, caretBumpBack, caretPos, caretPosOld);
         this._setValue(valUnmasked);
     }
+
 }
