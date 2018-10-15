@@ -62,7 +62,7 @@ export class MaskedInput {
         if(this.mask == null) {
             throw new Error("mask needs to be defined");
         }
-        this.maskChanged();
+        this.makeMasker();
         this.oldValue = this.masker.maskValue(this.numberToString(this.value));
         this.oldValueUnmasked = this.masker.unmaskValue(this.oldValue);
     }
@@ -580,6 +580,11 @@ export class MaskedInput {
     }
 
     maskChanged() {
+        this.makeMasker();
+        this.setValue(this.value);
+    }
+
+    private makeMasker() {
         this.masker = getMasker({
             maskFormat: this.mask, 
             bindMasking: this.bindMasking, 
