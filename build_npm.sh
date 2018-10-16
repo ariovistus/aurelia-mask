@@ -7,5 +7,3 @@ docker run -v $(pwd):/app --entrypoint tsc sandrokeil/typescript -d -p . --outDi
 echo "end compile $?"
 docker run -v $(pwd):/app --entrypoint sh sandrokeil/typescript build_tsdecls_only.sh
 docker run -v $(pwd):/app --entrypoint npm sandrokeil/typescript pack
-ls dist
-cat dist/masked-input.js
